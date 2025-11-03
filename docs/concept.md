@@ -118,11 +118,11 @@ pal/
   - GitHub Copilot Chat: `.github/prompts/palprompt/ → pal/prompts/`
   - VS Code (AGENTS互換): `palprompt/commands/ → pal/prompts/`
   - その他エージェント: それぞれの既定ディレクトリ内に `palprompt/` サブフォルダを作成し、`pal/prompts/` を同期
-- `pal-update` は `pal/prompts/` をソースとして各ツールディレクトリを最新化する。欠落言語ファイルは `pal/prompts/` から補充。
+- `pal-update` は `pal/prompts/` をソースとして各ツールディレクトリを最新化する。欠落言語ファイルは `pal/prompts/` から補充し、言語判定には `LANG` など標準環境変数を使用する。
 
 ## ローカライズ方針
 - すべての `pal-xx` プロンプトは英語版をベースに、必要な言語向けにローカライズ版（例: `pal-change.ja.md`, `pal-change.fr.md`）を提供する。
-- インストーラ/セットアップスクリプトはプロジェクト設定（環境変数 `PALPROMPT_LANG` や OS ロケール）を参照し、該当言語ファイルを `palprompt/commands/` へ配置する。
+- インストーラ/セットアップスクリプトは OS ロケールや `LANG` など標準環境変数を参照し、該当言語ファイルを `palprompt/commands/` へ配置する。
 - 言語ファイルが存在しない場合は英語版をフォールバックとして利用し、後から `pal-update` でローカライズファイルを追加できるようにする。
 - プロンプト本文では翻訳だけでなく、文化・用語差異を考慮し、例示コマンドや説明も対象言語に合わせて調整する。
 
