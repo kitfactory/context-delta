@@ -21,9 +21,15 @@ Python 実装の palprompt CLI です。OpenSpec の `openspec/` ワークフロ
   ```  
   実行すると以下を行います:
   - `pal/` 以下に project.md、AGENTS.md、specs/、changes/、prompts/ を生成
-  - `LANG` 環境変数などで日本語ロケールが検出された場合、`pal-*.ja.md` も展開
+  - `LANG` などのロケール情報から日本語が検出された場合、`pal-*.ja.md` などローカライズ済みプロンプトも展開
   - `.claude/commands/palprompt/` など各 AI アシスタント向けフォルダへプロンプトをコピー
   - 既存の `openspec/` があれば AGENTS.md、project.md、specs/、changes/ を `pal/` に移行
+
+- テンプレート更新  
+  ```bash
+  palprompt update
+  ```  
+  `pal/prompts/` を最新テンプレートで上書きし、各 AI アシスタント用フォルダにも同期します。新しい言語ファイルを追加した場合もこのコマンドで展開できます。
 
 - 生成されるディレクトリ構成
   ```

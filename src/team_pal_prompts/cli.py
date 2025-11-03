@@ -4,7 +4,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from .scaffold import InitResult, init_palprompt_structure
+from .scaffold import InitResult, init_palprompt_structure, refresh_prompts
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -22,6 +22,16 @@ def build_parser() -> argparse.ArgumentParser:
         help="Overwrite existing pal/ directory if present",
     )
     init_parser.add_argument(
+        "--path",
+        type=Path,
+        default=Path.cwd(),
+        help="Target project directory (default: current working directory)",
+    )
+
+    update_parser = subparsers.add_parser(
+        "update", help="Refresh prompt templates and sync assistant directories"
+    )
+    update_parser.add_argument(
         "--path",
         type=Path,
         default=Path.cwd(),
@@ -49,12 +59,28 @@ def cmd_init(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_update(args: argparse.Namespace) -> int:
+    try:
+        updated = refresh_prompts(root=args.path)
+    except FileNotFoundError as exc:
+        print(str(exc), file=sys.stderr)
+        return 1
+
+    print(
+        f"palprompt update complete at {(args.path / 'pal').resolve()} "
+        f"(updated: {', '.join(sorted(updated)) or 'none'})"
+    )
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
 
     if args.command == "init":
         return cmd_init(args)
+    if args.command == "update":
+        return cmd_update(args)
 
     parser.print_help()
     return 0

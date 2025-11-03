@@ -1,26 +1,26 @@
 # 作業計画書 (チェックリスト)
 
 ## 0. コンセプトと方針
-- [ ] `docs/concept.md` を最終確認し、CLI/プロンプト方針やローカライズ戦略に抜け漏れがないかレビューする
-- [ ] `palprompt init` 実行時の生成物と、`pal/` ディレクトリ構成のマイグレーション手順を確認する
+- [x] `docs/concept.md` を最終確認し、CLI/プロンプト方針やローカライズ戦略に抜け漏れがないかレビューする
+- [x] `palprompt init` 実行時の生成物と、`pal/` ディレクトリ構成のマイグレーション手順を確認する
 
 ## 1. CLI スケルトン整備
-- [ ] `team_pal_prompts` パッケージに `palprompt` CLI エントリポイントを追加し、`init` サブコマンドのみ実装する
-- [ ] 依存管理に `uv` を利用し、`uv add pytest` でテスト環境を整える
-- [ ] `pytest` ベースの CLI テスト（例: `tests/test_cli_init.py`）を作成し、`palprompt init` が `pal/` ディレクトリ構造と初期テンプレート（AGENTS.md、project.md、prompts/…）を生成することを自動検証する
-- [ ] 既存 `openspec/` が存在する場合 `pal/` へマイグレーションする処理を実装し、pytest で差分確認を含めたテストを追加する
+- [x] `team_pal_prompts` パッケージに `palprompt` CLI エントリポイントを追加し、`init` サブコマンドのみ実装する
+- [x] 依存管理に `uv` を利用し、`uv add pytest` でテスト環境を整える
+- [x] `pytest` ベースの CLI テスト（例: `tests/test_cli_init.py`）を作成し、`palprompt init` が `pal/` ディレクトリ構造と初期テンプレート（AGENTS.md、project.md、prompts/…）を生成することを自動検証する
+- [x] 既存 `openspec/` が存在する場合 `pal/` へマイグレーションする処理を実装し、pytest で差分確認を含めたテストを追加する
 
 ## 2. プロンプトテンプレート多言語対応
-- [ ] `pal/prompts/` に英語版テンプレート（`pal-xx.en.md`）を整備する
-- [ ] 日本語版テンプレート（`pal-xx.ja.md`）を追加し、`LANG` などのロケール環境変数から日本語が推定される環境で正しく展開されることを確認する
-- [ ] 他言語の追加方法とフォールバック動作を README へ記載する
-- [ ] `pytest` でローカライズ選択のテスト（`LANG` を切り替え → 対応する `pal-xx.ja.md` が配置されるか）を追加する
+- [x] `pal/prompts/` に英語版テンプレート（`pal-xx.en.md`）を整備する
+- [x] 日本語版テンプレート（`pal-xx.ja.md`）を追加し、`LANG` などのロケール環境変数から日本語が推定される環境で正しく展開されることを確認する
+- [x] 他言語の追加方法とフォールバック動作を README へ記載する
+- [x] `pytest` でローカライズ選択のテスト（`LANG` を切り替え → 対応する `pal-xx.ja.md` が配置されるか）を追加する
 
 ## 3. AI アシスタント連携
-- [ ] `palprompt init` で各アシスタント向けディレクトリ（.claude/…, .cursor/…, .github/prompts/…, など）を自動生成し、`pal/prompts/` からシンボリックリンクまたはコピーを行う
-- [ ] `pal-update` プロンプト実行時に全ディレクトリが最新テンプレートへ同期される仕組みを構築する（言語判定は `LANG` 等の標準環境変数を使用）
-- [ ] 対応外ツール向けの拡張方法を `AGENTS.md` に追記する
-- [ ] `pytest` で主要アシスタント向けディレクトリが生成されるか、リンク/コピーが正しく張られるかを検証する
+- [x] `palprompt init` で各アシスタント向けディレクトリ（.claude/…, .cursor/…, .github/prompts/…, など）を自動生成し、`pal/prompts/` からシンボリックリンクまたはコピーを行う
+- [x] `pal-update` プロンプト実行時に全ディレクトリが最新テンプレートへ同期される仕組みを構築する（言語判定は `LANG` 等の標準環境変数を使用）
+- [x] 対応外ツール向けの拡張方法を `AGENTS.md` に追記する
+- [x] `pytest` で主要アシスタント向けディレクトリが生成されるか、リンク/コピーが正しく張られるかを検証する
 
 ## 4. ワークフロー実装 (M1 → M3)
 - [ ] **M1:** 最小機能（CLI init と prompts 配置）を `pal-change` / `pal-build` / `pal-validate` / `pal-archive` のフローで完結させる

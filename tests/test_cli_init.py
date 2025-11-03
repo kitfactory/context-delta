@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 
 
-def run_cli(tmp_path: Path, *args: str, lang: str | None = None) -> subprocess.CompletedProcess[str]:
+def run_cli(tmp_path: Path, *cmd: str, lang: str | None = None) -> subprocess.CompletedProcess[str]:
     env = os.environ.copy()
     if lang is not None:
         env["LANG"] = lang
@@ -15,7 +15,7 @@ def run_cli(tmp_path: Path, *args: str, lang: str | None = None) -> subprocess.C
     env["PYTHONPATH"] = (
         f"{src_path}:{existing}" if existing else str(src_path)
     )
-    command = [sys.executable, "-m", "team_pal_prompts.cli", "init", "--path", str(tmp_path), *args]
+    command = [sys.executable, "-m", "team_pal_prompts.cli", *cmd]
     return subprocess.run(
         command,
         cwd=tmp_path,
@@ -27,7 +27,7 @@ def run_cli(tmp_path: Path, *args: str, lang: str | None = None) -> subprocess.C
 
 
 def test_palprompt_init_creates_structure(tmp_path: Path) -> None:
-    result = run_cli(tmp_path, lang="en_US.UTF-8")
+    result = run_cli(tmp_path, "init", lang="en_US.UTF-8")
     assert result.returncode == 0, result.stderr
 
     pal_dir = tmp_path / "pal"
@@ -41,7 +41,7 @@ def test_palprompt_init_creates_structure(tmp_path: Path) -> None:
 
 
 def test_palprompt_init_detects_locale_for_prompts(tmp_path: Path) -> None:
-    result = run_cli(tmp_path, lang="ja_JP.UTF-8")
+    result = run_cli(tmp_path, "init", lang="ja_JP.UTF-8")
     assert result.returncode == 0, result.stderr
 
     prompts_dir = tmp_path / "pal/prompts"
@@ -55,7 +55,7 @@ def test_palprompt_init_migrates_basic_openspec(tmp_path: Path) -> None:
     (openspec_dir / "specs/demo/spec.md").write_text("# Demo spec\n", encoding="utf-8")
     (openspec_dir / "AGENTS.md").write_text("Legacy instructions", encoding="utf-8")
 
-    result = run_cli(tmp_path, lang="en_US.UTF-8")
+    result = run_cli(tmp_path, "init", lang="en_US.UTF-8")
     assert result.returncode == 0, result.stderr
 
     pal_dir = tmp_path / "pal"
@@ -64,7 +64,7 @@ def test_palprompt_init_migrates_basic_openspec(tmp_path: Path) -> None:
 
 
 def test_palprompt_init_copies_prompts_for_assistants(tmp_path: Path) -> None:
-    result = run_cli(tmp_path, lang="en_US.UTF-8")
+    result = run_cli(tmp_path, "init", lang="en_US.UTF-8")
     assert result.returncode == 0, result.stderr
 
     expected = [
@@ -75,3 +75,22 @@ def test_palprompt_init_copies_prompts_for_assistants(tmp_path: Path) -> None:
     ]
     for rel in expected:
         assert (tmp_path / rel).exists(), f"{rel} was not created"
+
+
+def test_palprompt_update_refreshes_prompts(tmp_path: Path) -> None:
+    result = run_cli(tmp_path, "init", lang="en_US.UTF-8")
+    assert result.returncode == 0, result.stderr
+
+    prompts_dir = tmp_path / "pal/prompts"
+    change_prompt = prompts_dir / "pal-change.en.md"
+    change_prompt.write_text("outdated", encoding="utf-8")
+
+    claude_prompt = tmp_path / ".claude/commands/palprompt/pal-change.en.md"
+    claude_prompt.unlink()
+
+    update_result = run_cli(tmp_path, "update", lang="en_US.UTF-8")
+    assert update_result.returncode == 0, update_result.stderr
+
+    refreshed = change_prompt.read_text(encoding="utf-8")
+    assert "pal-change (EN)" in refreshed
+    assert claude_prompt.exists()

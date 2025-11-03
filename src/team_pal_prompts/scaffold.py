@@ -207,23 +207,24 @@ def ensure_directories(root: Path, paths: Iterable[Path]) -> set[str]:
     return created
 
 
-def write_file(path: Path, content: str) -> None:
-    if not path.exists():
-        path.write_text(content.rstrip() + "\n", encoding="utf-8")
+def write_file(path: Path, content: str, *, overwrite: bool = False) -> None:
+    if path.exists() and not overwrite:
+        return
+    path.write_text(content.rstrip() + "\n", encoding="utf-8")
 
 
-def scaffold_prompts(prompts_dir: Path) -> set[str]:
+def scaffold_prompts(prompts_dir: Path, *, overwrite: bool = False) -> set[str]:
     created: set[str] = set()
     for name, contents in DEFAULT_PROMPTS.items():
         target = prompts_dir / name
-        write_file(target, contents)
+        write_file(target, contents, overwrite=overwrite)
         created.add(f"prompts/{name}")
 
     language = detect_language()
     if language == "ja":
         for name, contents in JA_PROMPTS.items():
             target = prompts_dir / name
-            write_file(target, contents)
+            write_file(target, contents, overwrite=overwrite)
             created.add(f"prompts/{name}")
     return created
 
@@ -285,7 +286,7 @@ def init_palprompt_structure(root: Path | None = None, force: bool = False) -> I
     (pal_dir / "specs" / ".gitkeep").touch(exist_ok=True)
     (pal_dir / "changes" / ".gitkeep").touch(exist_ok=True)
 
-    prompt_results = scaffold_prompts(pal_dir / "prompts")
+    prompt_results = scaffold_prompts(pal_dir / "prompts", overwrite=False)
     result.created.update(prompt_results)
 
     migrated = migrate_from_openspec(root, pal_dir)
@@ -295,3 +296,16 @@ def init_palprompt_structure(root: Path | None = None, force: bool = False) -> I
     result.created.update(assistant_dirs)
 
     return result
+
+
+def refresh_prompts(root: Path | None = None) -> set[str]:
+    root = root or Path.cwd()
+    pal_dir = root / "pal"
+    prompts_dir = pal_dir / "prompts"
+    if not prompts_dir.exists():
+        raise FileNotFoundError("pal/prompts directory does not exist. Run 'palprompt init' first.")
+
+    results = scaffold_prompts(prompts_dir, overwrite=True)
+    assistant_dirs = sync_assistant_directories(root, prompts_dir)
+    results.update(assistant_dirs)
+    return results
