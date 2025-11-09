@@ -1,7 +1,7 @@
 [project]
-name = "team-pal-prompts"
+name = "specline"
 version = "0.1.0"
-description = "palprompt CLI for managing pal/ OpenSpec workflows"
+description = "SpecLine CLI for managing specline/ OpenSpec workflows"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = []
@@ -10,4 +10,5 @@ dependencies = []
 test = ["pytest>=8.0"]
 
 [project.scripts]
-palprompt = "team_pal_prompts.cli:main"
+specline = "spec_line.cli:main"
+palprompt = "spec_line.cli:main"

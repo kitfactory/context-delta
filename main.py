@@ -1,5 +1,5 @@
 def main():
-    print("Hello from team-pal-prompts!")
+    print("Hello from SpecLine!")
 
 
 if __name__ == "__main__":
