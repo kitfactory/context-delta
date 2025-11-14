@@ -25,7 +25,7 @@
 
 ---
 
-> **Context Delta ライブラリ** は、以下で説明する delta コマンド体系（`delta concept → delta archive`）を Python 環境で再利用できるようにまとめたものです。
+> **Context Delta ライブラリ** は、以下で説明する delta コマンド体系（`delta concept → delta archive`）を npm CLI と AI ワークフローで再利用できるようにまとめたものです。
 
 ## 2. LLM生成とムダ ― 「たくさん出す」は効率化ではない
 

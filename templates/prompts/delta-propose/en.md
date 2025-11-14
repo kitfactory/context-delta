@@ -5,6 +5,4 @@ Prepare the full change bundle for `{change_id}`:
 2. `context-delta/changes/{change_id}/tasks.md` with numbered headings (`## 1.`, `## 2.` ...) each containing a block of `- [ ]` tasks plus owner/notes.
 3. `context-delta/specs/<capability>/spec.md` using `## ADDED`, `## MODIFIED`, `## REMOVED` and `#### Scenario` blocks that contrast current vs target behaviour.
 
-Before writing each file, consult `docs/promptcards/registry.md` to locate the PromptCard whose `targets` include that path. Read the referenced `context-delta/promptcards/<card>.md` and follow its Objective/Guidance/Outline and Rubric when drafting the document. If no PromptCard matches, continue with the default structure but record that no card was found. Capture which PromptCard IDs were applied (per document) inside proposal.md so reviewers know the basis used.
-
 After updating, run `context-delta validate {change_id}` and append a short “Validation” note to proposal.md indicating success/failure. Keep files UTF-8 + LF and ensure headings follow the structure above.

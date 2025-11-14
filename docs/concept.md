@@ -1,7 +1,7 @@
 # コンセプトメモ
 
 ## コンセプト説明
-OpenSpec の価値は「仕様駆動で変更を管理し、AI アシスタントとも安全に連携できるワークフロー」にあります。本プロジェクトではその体験を Python エコシステムへ移植しつつ、**CLI 操作は初期化 (`delta init` / エイリアス `context-delta init`) のみに限定**し、それ以外は AI アシスタントと `delta-xx` プロンプトで完結させることを目標にしています。ユーザーはレビューと承認に集中し、ルーチン作業はプロンプト経由で再現可能な形に落とし込みます。
+OpenSpec の価値は「仕様駆動で変更を管理し、AI アシスタントとも安全に連携できるワークフロー」にあります。本プロジェクトではその体験を npm で配布する Context Delta CLI に集約しつつ、**CLI 操作は初期化 (`delta init` / エイリアス `context-delta init`) のみに限定**し、それ以外は AI アシスタントと `delta-xx` プロンプトで完結させることを目標にしています。ユーザーはレビューと承認に集中し、ルーチン作業はプロンプト経由で再現可能な形に落とし込みます。
 
 ### CLI とプロンプトの使い分け方針
 - **初期化のみ CLI**: `delta init`（エイリアス `context-delta init`）でディレクトリ構造や AGENTS.md、テンプレート群を生成する。これが唯一必須のコマンド。
@@ -9,8 +9,8 @@ OpenSpec の価値は「仕様駆動で変更を管理し、AI アシスタン�
 - **5 フェーズ意識**: Concept / Roadmap / Propose / Apply / Archive の順にプロンプトを配置し、OpenSpec の propose → apply → archive リズムを保ちながら上流工程も明示する。
 
 ## プロジェクトの方向性
-- OpenSpec の公式 Node.js CLI を Python で再実装する「Python クローン」プロジェクトを推進する。
-- リポジトリ名は `Context Delta`、Python パッケージは `context_delta`。
+- OpenSpec の公式 CLI と同じ UX を npm 版 Context Delta で提供し、AI 支援ワークフローを Node.js で再現する。
+- リポジトリ名は `Context Delta`、npm パッケージは `context-delta`（バイナリは `delta` / `context-delta`）。
 - CLI は `delta init` / `delta update`（エイリアス `context-delta …`）の最小構成。`delta init` 実行時は対象ツール（Claude/Cursor/GitHub/Codex/ローカル context-delta）を対話的に選択でき、`--assistants` でスクリプトから明示指定も可能。
 
 ## プロンプト命名規則
@@ -20,7 +20,7 @@ OpenSpec の価値は「仕様駆動で変更を管理し、AI アシスタン�
 - 引数が必要な場合はプロンプト内でプレースホルダ（`{change_id}`, `{target}`）を明示し、README などにも用例を載せる。
 
 ### CLI コマンド扱い
-| コマンド | Python クローンでの扱い |
+| コマンド | Context Delta CLI での扱い |
 |----------|-------------------------|
 | `delta init` (context-delta init) | 初回に 1 度だけ実行し、`context-delta/` 構造とテンプレを生成 |
 | `delta update` (context-delta update) | テンプレートの再同期。AI からの依頼で必要に応じて呼ぶ |
@@ -45,7 +45,7 @@ OpenSpec の価値は「仕様駆動で変更を管理し、AI アシスタン�
 | `delta-roadmap` | マイルストーン表（M1〜）の作成。スコープ/成果物/完了条件/依存関係/推奨 change-id。 | - 表または箇条書きでマイルストーンを列挙<br>- `delta-propose` に引き継ぐ change-id を提示<br>- 依存や先行条件が書かれる | OpenSpec に近いテンプレなし。計画メモから派生。 |
 | `delta-propose` | `{change_id}` の `proposal.md` / `tasks.md` / `specs/<cap>/spec.md` を同時に下書き。 | - proposal: Why / What / Impact + 成功指標/リスク<br>- tasks: 番号付き `##` と `- [ ]` で担当/依存を記述<br>- spec: ADDED/MODIFIED/REMOVED + `#### Scenario` で現状とデルタを比較し、`context-delta validate` に合格する構造 | OpenSpec の `pal-change` と spec レビューを統合。 |
 | `delta-apply` | Apply 期間のステータスレポート。タスク進捗、実行コマンド、テスト結果、コード差分、検証結果、次アクション。 | - `tasks.md` の更新内容を列挙<br>- 実行したコマンドと結果を記載（成功/失敗を明示）<br>- 直近の `context-delta validate` （または `--all`）と対処案を含める | OpenSpec の build / validate テンプレ統合版。 |
-| `delta-archive` | アーカイブ前の最終チェック。タスク完了、デルタ摘要、必要コマンド、フォローアップ。 | - 未完了タスクがあれば差し戻し指示<br>- 仕様に反映するデルタとドキュメント更新箇所を列挙<br>- 実行するコマンド列（archive、git、tag 等）を順序付きで提示 | OpenSpec の archive テンプレを Python 版に最適化。 |
+| `delta-archive` | アーカイブ前の最終チェック。タスク完了、デルタ摘要、必要コマンド、フォローアップ。 | - 未完了タスクがあれば差し戻し指示<br>- 仕様に反映するデルタとドキュメント更新箇所を列挙<br>- 実行するコマンド列（archive、git、tag 等）を順序付きで提示 | OpenSpec の archive テンプレを Context Delta CLI 向けに最適化。 |
 | `delta-update` | テンプレとローカライズファイルの更新手順。 | - 対象ディレクトリ別に追加/更新/削除項目を列挙<br>- バックアップ/差分確認/テストの実施手順を記載 | OpenSpec の update テンプレをベースにしつつ Context Delta 固有のコピー先を追加。 |
 
 ## ロードマップに沿った進め方
@@ -88,5 +88,5 @@ context-delta/
 - 新言語を追加した場合は `delta-update` / `context-delta update` で `.claude/` 等にも展開されるよう保証する。
 
 ## 追加メモ
-- 仕様や要件は既存の OpenSpec スペックに準拠し、Python 実装でも同等のエクスペリエンスを提供する。
+- 仕様や要件は既存の OpenSpec スペックに準拠し、npm 版でも同等のエクスペリエンスを提供する。
 - ドキュメントやリリースノートでは、Node 版との互換性・相互運用性を明記する。

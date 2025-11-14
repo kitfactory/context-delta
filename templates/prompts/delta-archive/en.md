@@ -6,6 +6,5 @@ Before archiving `{change_id}` produce a checklist that covers:
 - Verification commands executed (include timestamped `context-delta validate --all` results and any deployment checks).
 - Ordered command list to run (`context-delta archive {change_id}`, git commit/tag, docs build).
 - Release notes or follow-up tickets needed post-archive.
-- PromptCard compliance log: for each deliverable touched, cite the PromptCard ID from `docs/promptcards/registry.md`, note the final rubric score (Pass/Borderline/Fail), and capture any regression inputs executed.
 
-English environments only need English documentation; Japanese instructions about bilingual archives live in the JA template.
+English environments only need English documentation; Japanese instructions are handled in the JA template.

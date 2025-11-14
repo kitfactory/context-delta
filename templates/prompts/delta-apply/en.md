@@ -6,6 +6,4 @@ Draft an Apply-phase status report for `{change_id}` with these sections:
 3. `## context-delta validate Results` – summarise the latest run (date, success/failure, key errors).
 4. `## Next Actions` – remaining TODOs, risks, and support needed.
 
-When reporting Task Status and validation results, state which PromptCards were used for the updated files (lookup via `docs/promptcards/registry.md`) and whether the current draft meets each card’s Rubric. Highlight any gaps and planned remediation.
-
 Ensure the report references commit hash or PR if available, and that `context-delta validate {change_id}` was executed before sending the update.

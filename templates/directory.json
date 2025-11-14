@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Declarative directory skeleton used by the Node CLI to mirror the Python init flow.",
+  "directories": [
+    "context-delta",
+    "context-delta/prompts",
+    "context-delta/specs",
+    "context-delta/changes",
+    "context-delta/changes/archive",
+    ".claude/commands/context-delta",
+    ".cursor/prompts/context-delta",
+    ".github/prompts/context-delta",
+    "context-delta/commands"
+  ],
+  "legacyStateDirs": [
+    "specline",
+    "pal"
+  ]
+}
