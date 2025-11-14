@@ -6,12 +6,13 @@
   "type": "module",
   "main": "./dist/delta.js",
   "bin": {
-    "delta": "./dist/delta.js",
-    "context-delta": "./dist/delta.js"
+    "delta": "./bin/cli.cjs",
+    "context-delta": "./bin/cli.cjs"
   },
   "files": [
     "dist",
     "templates",
+    "bin/cli.cjs",
     "README.md",
     "docs/npm-architecture.md"
   ],
