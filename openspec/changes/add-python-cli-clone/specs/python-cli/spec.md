@@ -1,16 +1,16 @@
 ## ADDED Requirements
 ### Requirement: Python CLI Project Structure
-The system SHALL provide a standalone Python package (`spec_line`) that exposes a SpecLine-compatible CLI entry point when installed.
+The system SHALL provide a standalone Python package (`context_delta`) that exposes a Context Delta-compatible CLI entry point when installed.
 
 #### Scenario: Installing the Python CLI
-- **WHEN** developers install the package via `pip install specline` (or editable mode)
-- **THEN** the environment SHALL expose a `specline` console script (with `palprompt` alias)
-- **AND** running `specline --version` SHALL display the Python build metadata
+- **WHEN** developers install the package via `pip install context-delta` (or editable mode)
+- **THEN** the environment SHALL expose a `delta` console script (with `context-delta` alias)
+- **AND** running `delta --version` SHALL display the Python build metadata
 - **AND** project metadata SHALL document minimum supported Python versions (3.11+)
 
 #### Scenario: Repository layout
 - **WHEN** the repository is cloned
-- **THEN** it SHALL include `pyproject.toml`, `spec_line/__init__.py`, `spec_line/cli.py`, and module folders for commands, core logic, and utilities
+- **THEN** it SHALL include `pyproject.toml`, `context_delta/__init__.py`, `context_delta/cli.py`, and module folders for commands, core logic, and utilities
 - **AND** developer tooling SHALL ship with lint, formatting, and test commands (e.g., `uv`, `ruff`, `pytest`)
 - **AND** documentation SHALL describe virtual environment setup
 

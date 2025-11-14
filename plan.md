@@ -1,57 +1,29 @@
-# 作業計画書 (チェックリスト)
+# 作業計画書 (DeltaContext 整合チェックリスト)
 
-## 0. コンセプトと方針
-- [x] `docs/concept.md` を最終確認し、CLI/プロンプト方針やローカライズ戦略に抜け漏れがないかレビューする
-- [x] `specline init`（互換: `palprompt init`）実行時の生成物と、`specline/` ディレクトリ構成のマイグレーション手順を確認する
+## 1. ワークフロー基盤の整備
+- [x] `docs/deltacontext.md` で示した Concept → Propose → Verify → Apply → Archive の思想を整理し、Context Delta という名前に一本化する
+- [ ] CLI/プロンプト/README の各所で 5 フェーズの役割と入出力を揃え、利用者がどこで concept・roadmap・apply を実行するか迷わないよう相互参照を追加する
+- [ ] `context_delta` パッケージのドキュメントに、各フェーズ直後に実行する Verify プロンプト（concept/propose/apply/archive）の役割とフックポイントを明記し、どの API で差分検証・整流をサポートするかをまとめる
 
-## 1. CLI スケルトン整備
-- [x] `spec_line` パッケージに `specline` CLI エントリポイント（alias `palprompt`）を追加し、`init` サブコマンドのみ実装する
-- [x] 依存管理に `uv` を利用し、`uv add pytest` でテスト環境を整える
-- [x] `pytest` ベースの CLI テスト（例: `tests/test_cli_init.py`）を作成し、`specline init`（alias `palprompt init`）が `specline/` ディレクトリ構造と初期テンプレート（AGENTS.md、project.md、prompts/…）を生成することを自動検証する
-- [x] 既存 `openspec/` が存在する場合 `specline/` へマイグレーションする処理を実装し、pytest で差分確認を含めたテストを追加する
+## 2. CLI / プロンプト機能の充実
+- [x] `delta init` / `delta update` による state ディレクトリ生成と多言語テンプレ展開を実装・テストする
+- [ ] Concept 後に `delta-verify-concept`, Propose 後に `delta-verify-propose` …… といった Verify 系プロンプトを定義し、それぞれが `context-delta validate` や差分チェックを実行できるようテンプレ/スクリプトを整備する
+- [ ] `delta-apply` / `delta-archive` から参照するコマンドリスト（検証、git、docs反映）を CLI 側でテンプレ化し、ユーザーが手動で書き直さなくて良いよう補助スクリプトを用意する
+- [ ] Codex/Claude/Cursor 以外のアシスタント（例: Cline, Windsurf）向け配布先を設定し、`delta init --assistants` で選択できるよう拡張する
 
-## 2. プロンプトテンプレート多言語対応
-- [x] `specline/prompts/` にテンプレートを整備し、デフォルトでは英語版が展開されることを確認する
-- [x] `LANG` などのロケール環境変数から日本語が推定される環境で日本語版が自動的に展開されるよう多言語対応を実装する
-- [x] 他言語の追加方法とフォールバック動作を README へ記載する
-- [x] `pytest` でローカライズ選択のテスト（`LANG` を切り替え → `specline-xx.md` の内容が該当言語になるか）を追加する
+## 3. プロンプト品質と検証
+- [ ] `delta-prompts/` それぞれに Markdown lint/pytest での自動検証を追加し、`docs/prompt_review.md` の基準（言語統一、フォーマット、検証、依存整合）を CI で担保する
+- [ ] `delta-roadmap` の細粒度マイルストーン方針をテストケース化し、依存チェーンの不足・未定義参照がないかを自動で弾く
+- [ ] `delta-archive` の日本語環境での日英アーカイブ出力指示をサンプルワークフローで検証し、結果を `docs/generation.md` に追記する
 
-## 3. AI アシスタント連携
-- [x] `specline init` で各アシスタント向けディレクトリ（`.claude/commands/specline/` など）を自動生成し、`specline/prompts/` からシンボリックリンクまたはコピーを行う
-- [x] `specline-update` プロンプト実行時に全ディレクトリが最新テンプレートへ同期される仕組みを構築する（言語判定は `LANG` 等の標準環境変数を使用）
-- [x] 対応外ツール向けの拡張方法を `AGENTS.md` に追記する
-- [x] `pytest` で主要アシスタント向けディレクトリが生成されるか、リンク/コピーが正しく張られるかを検証する
+## 4. ドキュメントと教育コンテンツ
+- [ ] README に「Proactive Delta Context の使い方」節を追加し、concept → roadmap → propose → apply → archive → docs反映までを `docs/deltacontext.md` と同じ語彙で説明する
+- [ ] `docs/analysis.md` へ CLI/プロンプト/ドキュメントそれぞれが DeltaContext でどの役割を担うかの対応表を追加する
+- [ ] `docs/concept.md` / `docs/generation.md` / `docs/prompt_review.md` の更新履歴をまとめ、差分を `docs/changelog.md`（新規）として記録する
+- [ ] OSS 利用者向けのクイックスタート（短い screencast 台本やステップバイステップ手順）を `docs/tutorial.md` として作成し、Context Delta ライブラリ導入を促す
 
-## 4. ワークフロー実装 (M1 → M3)
-- [ ] **M1:** 最小機能（CLI init と prompts 配置）を `specline-propose` / `specline-apply` / `specline-archive` の 5 フェーズフローで完結させる
-- [ ] **M2:** 変更管理ワークフロー（`specline-propose` テンプレや `specline-apply` ログ）を整備し、仕様 `specline/specs/cli-change` へ反映する
-- [ ] **M3:** ダッシュボード/ドキュメント整備など追加機能を実装し、ロードマップ通り `specline-archive` まで完走する
-- [ ] 各マイルストーン完了時に `pytest` の回帰テストを実行し、CLI/プロンプトが期待通り動作することを確認する
-
-## 4.5 5 フェーズテンプレートへの再編
-- [ ] `docs/generation.md` で定義した Concept / Roadmap / Propose / Apply / Archive の 5 リズムに合わせ、各 `specline-*.md` テンプレートの見出し構成と必須出力を更新する
-- [ ] Propose フェーズ向けテンプレート（`specline-propose`）の粒度を固め、英語・日本語版へ同時反映する
-- [ ] Apply フェーズ向けテンプレート（`specline-apply`）に品質ゲート情報を統合し、冗長な重複セクションを削除する
-- [ ] テンプレート変更後に `.claude/` `.cursor/` `.github/` などへの同期結果を確認し、既存プロンプト利用手順への影響を README/AGENTS.md に追記する
-
-## 5. ドキュメントとリリース準備
-- [ ] README に `specline init` / `specline update`（alias: `palprompt ...`）の使い方、ローカライズ、各 AI ツール連携手順を記載する
-- [ ] `docs/concept.md`・`docs/analysis.md` の最新化を確認し、必要なら changelog を作成する
-- [ ] `specline-propose add-python-cli-clone` の `tasks.md` をすべて完了に更新し、`specline validate --all` をパスしたら `specline archive` で作業を確定する
-
-## 6. プロンプト検証基準
-- [ ] `specline-concept`: `docs/concept.md` 向け見出し構成・必須セクションを明文化し、Markdown lint で検証する
-- [ ] `specline-roadmap`: Milestone 表の列構成（Milestone/Scope/Deliverables/Acceptance/Dependencies/change-id）と依存順序の検証を pytest で実装する
-- [ ] `specline-propose`: proposal/tasks/spec 生成後に `specline validate` だけでなく diff/lint を実行し、完了条件をテンプレ内で宣言する
-- [ ] `specline-apply`: tasks.md と進捗レポートの整合、実行コマンドログ、`specline validate` 成功基準をテンプレに明記し、pytest で検証する
-- [ ] `specline-archive`: 日本語環境では docs/ 配下に日英 2 文書をアーカイブする指示を追加し、検証ステップを整備する（英語環境は英語のみ）
-- [ ] `specline-update`: 更新対象ディレクトリと diff 記録のフォーマット、実行後チェックリストをテンプレに明記する
-- [ ] 共通: propose / apply / archive が内部で `specline validate`（または `specline verify`）を呼び出し成功を確認するワークフローをテンプレに追記し、pytest で検証する
-- [ ] 共通: specline/prompts や specline/commands におけるフォーマット・検証基準を `docs/prompt_review.md` の観点（フォーマット、検証、言語、依存整合）で維持する
-
-## 7. プロジェクト名の SpecLine への改称計画
-- [ ] リポジトリと Python パッケージの名称（旧 `team-pal-prompts`, `team_pal_prompts`）を `SpecLine` / `spec_line` として維持するため、pyproject・import・テスト・CLI エントリポイントを定期的に確認する。
-- [ ] CLI ブランド表記とバイナリ名が `specline`（alias: `palprompt`）で統一されているか確認し、必要なら追加サブコマンドや互換方針を決定する。
-- [ ] `README.md`、`docs/`、`AGENTS.md`、`specline/prompts/` など全てのドキュメントに登場する旧名称を `SpecLine` に更新するための手順を策定し、レビュー観点（スクリーンショット、コード例、バッジ等の差し替え）を整理する。
-- [ ] テストやパスに組み込まれた旧名称（例: `.claude/commands/palprompt/`）をどう扱うか決め、互換性維持のための移行ステップ（マイグレーションスクリプト、deprecation note）を計画する。
-- [ ] 変更適用後に `specline init`（互換エイリアス `palprompt init`）と `pytest` を走らせて問題ないことを確認し、必要に応じて release note / changelog の更新、バージョン番号インクリメントを行う。
+## 5. リリース / メンテナンス計画
+- [ ] `pyproject.toml` のメタデータ（description, classifiers, project URLs）を Context Delta として整備し、PyPI 公開準備を整える
+- [ ] `main` ブランチで `delta init --force` → `pytest` → `delta update --assistants all` の自己検証フローを GitHub Actions へ追加する
+- [ ] 旧 `specline` / `palprompt` ユーザー向けの移行ガイドを README 末尾に入れ、`delta init --migrate-specline` のような互換オプションを検討する
+- [ ] 変更完了後に version bump + git tag + release notes を発行し、`docs/deltacontext.md` と同じナラティブでリリース項目を整理する

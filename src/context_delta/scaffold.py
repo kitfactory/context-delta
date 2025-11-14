@@ -8,132 +8,132 @@ from pathlib import Path
 from typing import Iterable
 
 PROMPT_TEMPLATES = {
-    "specline-concept.md": {
-        "en": """# specline-concept (EN)
+    "delta-concept.md": {
+        "en": """# delta-concept (EN)
 
 Update `docs/concept.md` with the following sections in this exact order:
 1. `## Concept Summary` – bullet list that restates project purpose and in/out of scope.
 2. `## CLI vs Prompt Responsibilities` – Markdown table with columns `Area` and `Owner`, covering init/update, proposal/approval, validation, and documentation.
-3. `## Localisation Strategy` – describe how SpecLine selects Japanese vs English prompts (single language at install time; Japanese environments must produce bilingual archive docs).
-4. `## specline/ Directory Structure` – fenced code block showing the canonical tree (specline/project.md, AGENTS.md, prompts, specs, changes).
+3. `## Localisation Strategy` – describe how Context Delta selects Japanese vs English prompts (single language at install time; Japanese environments must produce bilingual archive docs).
+4. `## context-delta/ Directory Structure` – fenced code block showing the canonical tree (context-delta/project.md, AGENTS.md, prompts, specs, changes).
 
 Preserve any existing content outside these sections. Ensure headings appear once and in the order shown above; run markdownlint (or equivalent) if needed.
 """,
-        "ja": """# specline-concept (JA)
+        "ja": """# delta-concept (JA)
 
 `docs/concept.md` を以下の順番で更新してください:
 1. `## Concept Summary` – プロジェクト目的とスコープ内/外を箇条書きで整理
 2. `## CLI vs Prompt Responsibilities` – `Area` / `Owner` 列を持つ Markdown 表で init/update、proposal/approval、validation、ドキュメント更新の担当を明記
 3. `## Localisation Strategy` – 日本語環境では日本語プロンプトをインストールし、アーカイブ時に日英 2 文書を生成する方針、英語環境では英語のみでよい旨を説明
-4. `## specline/ Directory Structure` – specline/project.md, AGENTS.md, prompts, specs, changes を示すツリーをコードブロックで記載
+4. `## context-delta/ Directory Structure` – context-delta/project.md, AGENTS.md, prompts, specs, changes を示すツリーをコードブロックで記載
 
 セクション以外の既存内容は保持しつつ更新してください。見出し構成が崩れないよう lint（markdownlint 等）で確認します。
 """,
     },
-    "specline-roadmap.md": {
-        "en": """# specline-roadmap (EN)
+    "delta-roadmap.md": {
+        "en": """# delta-roadmap (EN)
 
 Document the requested capability as milestone-sized changes using a Markdown table with the header:
 `| Milestone | Scope | Deliverables | Acceptance | Dependencies | Change ID |`
 
-- Name milestones sequentially (M1, M2, ...). `Dependencies` may only reference earlier milestones.
-- `Acceptance` must prove the milestone leaves the product shippable so later milestones do not require rework.
+- Name milestones sequentially (M1, M2, ...). Split work into fine-grained slices that build from foundational functionality up to advanced behaviour; `Dependencies` may only reference earlier milestones that unlock the next slice.
+- `Acceptance` must prove the milestone leaves the product shippable and that the next milestone can proceed without reworking the previous slice.
 - After the table add `## Notes` summarising risk, critical path, and why the dependency order is required.
-- Validate that every milestone has at least one deliverable and that no dependency references an undefined milestone.
+- Validate that every milestone has at least one deliverable, that dependency chains cover prerequisite functionality, and that no dependency references an undefined milestone.
 """,
-        "ja": """# specline-roadmap (JA)
+        "ja": """# delta-roadmap (JA)
 
 次のヘッダーを持つ Markdown 表でマイルストーンを記述してください:
 `| Milestone | Scope | Deliverables | Acceptance | Dependencies | Change ID |`
 
-- M1, M2 ... のように連番で記載し、`Dependencies` 列には先行マイルストーンのみを記載すること
-- `Acceptance` では、当該マイルストーン完了時に製品がリリース可能であり、次のマイルストーンで追加改修が不要である理由を明記する
-- 表の後に `## Notes` を追加し、リスクやクリティカルパス、依存順序の妥当性を説明する
-- 未定義のマイルストーンを依存に書いていないか、各行に Deliverables/Acceptance が存在するかを確認する
+- M1, M2 ... のように連番で記載し、基礎 → 応用へと段階的に機能を細分化すること。`Dependencies` 列には次の段階を成立させるための先行マイルストーンのみを記載してください。
+- `Acceptance` では、当該マイルストーン完了時に製品がリリース可能であり、次の段階へ進む際に再工事が不要である理由を明記すること。
+- 表の後に `## Notes` を追加し、リスクやクリティカルパス、依存順序の妥当性を説明すること。
+- 未定義のマイルストーンを依存に書いていないか、各行に Deliverables/Acceptance が存在するか、依存関係が前提機能を十分にカバーしているかを確認すること。
 """,
     },
-    "specline-propose.md": {
-        "en": """# specline-propose (EN)
+    "delta-propose.md": {
+        "en": """# delta-propose (EN)
 
 Prepare the full change bundle for `{change_id}`:
-1. `changes/{change_id}/proposal.md` with sections `## Why`, `## What Changes`, `## Impact`, `## Success Metrics`, `## Risks`.
-2. `changes/{change_id}/tasks.md` with numbered headings (`## 1.`, `## 2.` ...) each containing a block of `- [ ]` tasks plus owner/notes.
-3. `specline/specs/<capability>/spec.md` using `## ADDED`, `## MODIFIED`, `## REMOVED` and `#### Scenario` blocks that contrast current vs target behaviour.
+1. `context-delta/changes/{change_id}/proposal.md` with sections `## Why`, `## What Changes`, `## Impact`, `## Success Metrics`, `## Risks`.
+2. `context-delta/changes/{change_id}/tasks.md` with numbered headings (`## 1.`, `## 2.` ...) each containing a block of `- [ ]` tasks plus owner/notes.
+3. `context-delta/specs/<capability>/spec.md` using `## ADDED`, `## MODIFIED`, `## REMOVED` and `#### Scenario` blocks that contrast current vs target behaviour.
 
-After updating, run `specline validate {change_id}` and append a short “Validation” note to proposal.md indicating success/failure. Keep files UTF-8 + LF and ensure headings follow the structure above.
+After updating, run `context-delta validate {change_id}` and append a short “Validation” note to proposal.md indicating success/failure. Keep files UTF-8 + LF and ensure headings follow the structure above.
 """,
-        "ja": """# specline-propose (JA)
+        "ja": """# delta-propose (JA)
 
 `{change_id}` の変更一式を以下の要件で整備してください:
-1. `changes/{change_id}/proposal.md` に `## Why` / `## What Changes` / `## Impact` / `## Success Metrics` / `## Risks` を順番に配置
-2. `changes/{change_id}/tasks.md` は `## 1.` のような番号付き見出しと、その配下に担当/期日付きの `- [ ]` チェックボックスを記述
-3. `specline/specs/<capability>/spec.md` では `## ADDED` / `## MODIFIED` / `## REMOVED` と `#### Scenario` を用い、現状と変更後を比較
+1. `context-delta/changes/{change_id}/proposal.md` に `## Why` / `## What Changes` / `## Impact` / `## Success Metrics` / `## Risks` を順番に配置
+2. `context-delta/changes/{change_id}/tasks.md` は `## 1.` のような番号付き見出しと、その配下に担当/期日付きの `- [ ]` チェックボックスを記述
+3. `context-delta/specs/<capability>/spec.md` では `## ADDED` / `## MODIFIED` / `## REMOVED` と `#### Scenario` を用い、現状と変更後を比較
 
-編集後に `specline validate {change_id}` を実行し、結果を proposal.md の末尾に「Validation」メモとして記載してください。ファイルは UTF-8・LF で統一します。
+編集後に `context-delta validate {change_id}` を実行し、結果を proposal.md の末尾に「Validation」メモとして記載してください。ファイルは UTF-8・LF で統一します。
 """,
     },
-    "specline-apply.md": {
-        "en": """# specline-apply (EN)
+    "delta-apply.md": {
+        "en": """# delta-apply (EN)
 
 Draft an Apply-phase status report for `{change_id}` with these sections:
-1. `## Task Status` – mirror `changes/{change_id}/tasks.md`, listing completed/blocked items.
-2. `## Commands and Tests` – bullet list `- command: result` covering `specline validate`, unit tests, linters, etc.
-3. `## specline validate Results` – summarise the latest run (date, success/failure, key errors).
+1. `## Task Status` – mirror `context-delta/changes/{change_id}/tasks.md`, listing completed/blocked items.
+2. `## Commands and Tests` – bullet list `- command: result` covering `context-delta validate`, unit tests, linters, etc.
+3. `## context-delta validate Results` – summarise the latest run (date, success/failure, key errors).
 4. `## Next Actions` – remaining TODOs, risks, and support needed.
 
-Ensure the report references commit hash or PR if available, and that `specline validate {change_id}` was executed before sending the update.
+Ensure the report references commit hash or PR if available, and that `context-delta validate {change_id}` was executed before sending the update.
 """,
-        "ja": """# specline-apply (JA)
+        "ja": """# delta-apply (JA)
 
 `{change_id}` の進捗レポートを次の構成で作成してください:
-1. `## Task Status` – `changes/{change_id}/tasks.md` の完了/未完了/ブロッカーを対応付けて記載
-2. `## Commands and Tests` – `- コマンド: 結果` 形式で `specline validate`, `uv run pytest`, lint 等の実行履歴を列挙
-3. `## specline validate Results` – 最新実行日時と成功/失敗、エラー内容を要約
+1. `## Task Status` – `context-delta/changes/{change_id}/tasks.md` の完了/未完了/ブロッカーを対応付けて記載
+2. `## Commands and Tests` – `- コマンド: 結果` 形式で `context-delta validate`, `uv run pytest`, lint 等の実行履歴を列挙
+3. `## context-delta validate Results` – 最新実行日時と成功/失敗、エラー内容を要約
 4. `## Next Actions` – 残タスク、リスク、必要なサポート
 
-レポート作成前に必ず `specline validate {change_id}` を実行し、結果を記載してください。
+レポート作成前に必ず `context-delta validate {change_id}` を実行し、結果を記載してください。
 """,
     },
-    "specline-archive.md": {
-        "en": """# specline-archive (EN)
+    "delta-archive.md": {
+        "en": """# delta-archive (EN)
 
 Before archiving `{change_id}` produce a checklist that covers:
-- Confirmation that `changes/{change_id}/tasks.md` has no unchecked items (if any remain, explain remediation).
+- Confirmation that `context-delta/changes/{change_id}/tasks.md` has no unchecked items (if any remain, explain remediation).
 - Table or bullet list summarising spec deltas (file path, ADDED/MODIFIED/REMOVED, short description).
-- Verification commands executed (include timestamped `specline validate --all` results and any deployment checks).
-- Ordered command list to run (`specline archive {change_id}`, git commit/tag, docs build).
+- Verification commands executed (include timestamped `context-delta validate --all` results and any deployment checks).
+- Ordered command list to run (`context-delta archive {change_id}`, git commit/tag, docs build).
 - Release notes or follow-up tickets needed post-archive.
 
 English environments only need English documentation; Japanese instructions are handled in the JA template.
 """,
-        "ja": """# specline-archive (JA)
+        "ja": """# delta-archive (JA)
 
 `{change_id}` のアーカイブ前に次を必ず確認してください:
-- `changes/{change_id}/tasks.md` の未完了タスクがゼロであること（残る場合は根拠と対処策を明記）
+- `context-delta/changes/{change_id}/tasks.md` の未完了タスクがゼロであること（残る場合は根拠と対処策を明記）
 - スペック差分の一覧（ファイル、ADDED/MODIFIED/REMOVED、概要）を表または箇条書きで整理
-- 実行した検証コマンド（`specline validate --all` など）と日時を記録
-- 最終実行コマンド（`specline archive {change_id}`, git commit/tag, docs build 等）を順番で提示
+- 実行した検証コマンド（`context-delta validate --all` など）と日時を記録
+- 最終実行コマンド（`context-delta archive {change_id}`, git commit/tag, docs build 等）を順番で提示
 - アーカイブ後に必要なリリースノートやフォローアップチケット
 
 LANG が `ja` の場合は docs/ 以下に日英 2 種類の成果物（例: `docs/changes/{change_id}.ja.md` と `.en.md`）を作成し、英語版には主要な変更点を英語で要約してください。
 """,
     },
-    "specline-update.md": {
-        "en": """# specline-update (EN)
+    "delta-update.md": {
+        "en": """# delta-update (EN)
 
 Describe the template refresh steps with the following structure:
-1. `## Directories Updated` – bullet list (`specline/prompts`, `.claude/commands/specline`, `$CODEX_HOME/prompts`, etc.).
+1. `## Directories Updated` – bullet list (`context-delta/prompts`, `.claude/commands/context-delta`, `$CODEX_HOME/prompts`, etc.).
 2. `## File Differences` – table with columns `File`, `Change (added/removed/modified)`, `Notes`.
-3. `## Verification` – commands run (e.g. `specline update --assistants ...`, `pytest`), expected outcomes, and manual checks (open prompts, lint).
+3. `## Verification` – commands run (e.g. `context-delta update --assistants ...`, `pytest`), expected outcomes, and manual checks (open prompts, lint).
 
 Highlight any follow-up required for downstream tools or documentation.
 """,
-        "ja": """# specline-update (JA)
+        "ja": """# delta-update (JA)
 
 テンプレート更新作業を次の構成でまとめてください:
-1. `## Directories Updated` – `specline/prompts`, `.claude/commands/specline`, `$CODEX_HOME/prompts` など更新対象ディレクトリを箇条書きで列挙
+1. `## Directories Updated` – `context-delta/prompts`, `.claude/commands/context-delta`, `$CODEX_HOME/prompts` など更新対象ディレクトリを箇条書きで列挙
 2. `## File Differences` – `File` / `Change (added/removed/modified)` / `Notes` の表で差分を記録
-3. `## Verification` – 実行したコマンド（例: `specline update --assistants claude,codex`, `pytest`）と期待結果、手動確認事項を記載
+3. `## Verification` – 実行したコマンド（例: `context-delta update --assistants claude,codex`, `pytest`）と期待結果、手動確認事項を記載
 
 更新後に必要なドキュメントやツール側の確認があれば忘れずに書いてください。
 """,
@@ -142,37 +142,37 @@ Highlight any follow-up required for downstream tools or documentation.
 
 PROJECT_MD = """# Project Overview
 
-This project uses SpecLine (a Python clone of OpenSpec tooling) to manage
+This project uses Context Delta (a Python clone of OpenSpec tooling) to manage
 spec-driven workflows for AI assistants. The source of truth lives in
-`specline/specs/`, while in-progress work resides in `specline/changes/`.
+`context-delta/specs/`, while in-progress work resides in `context-delta/changes/`.
 """
 
-AGENTS_MD = """<!-- SPECLINE:START -->
-# SpecLine Instructions
+AGENTS_MD = """<!-- CONTEXT-DELTA:START -->
+# Context Delta Instructions
 
-- Read `specline/project.md` for context.
-- Follow workflow prompts located in `specline/prompts/`.
-- Use `specline init` (already executed) to regenerate managed files if needed.
-- For proposal or spec updates run the corresponding `specline-*.md` prompt.
-<!-- SPECLINE:END -->
+- Read `context-delta/project.md` for context.
+- Follow workflow prompts located in `context-delta/prompts/`.
+- Use `context-delta init` (already executed) to regenerate managed files if needed.
+- For proposal or spec updates run the corresponding `delta-*.md` prompt.
+<!-- CONTEXT-DELTA:END -->
 """
 
-ROOT_AGENTS_BOOTSTRAP = """<!-- SPECLINE-ROOT:START -->
+ROOT_AGENTS_BOOTSTRAP = """<!-- CONTEXT-DELTA-ROOT:START -->
 # Repository Instructions
 
-This repository stores the managed AI assistant guidance under `specline/AGENTS.md`.
-Run `specline init --update-root-agents` after updating SpecLine to refresh this notice.
+This repository stores the managed AI assistant guidance under `context-delta/AGENTS.md`.
+Run `context-delta init --update-root-agents` after updating Context Delta to refresh this notice.
 
-- Primary instructions: `specline/AGENTS.md`
-- Project overview: `specline/project.md`
-- Prompt templates: `specline/prompts/`
+- Primary instructions: `context-delta/AGENTS.md`
+- Project overview: `context-delta/project.md`
+- Prompt templates: `context-delta/prompts/`
 
 Please edit those files (not this bootstrap) for workflow changes.
-<!-- SPECLINE-ROOT:END -->
+<!-- CONTEXT-DELTA-ROOT:END -->
 """
 
-STATE_DIR = Path("specline")
-LEGACY_STATE_DIR = Path("pal")
+STATE_DIR = Path("context-delta")
+LEGACY_STATE_DIRS: tuple[Path, ...] = (Path("specline"), Path("pal"))
 
 DIRECTORY_SKELETON: tuple[Path, ...] = (
     STATE_DIR,
@@ -182,13 +182,13 @@ DIRECTORY_SKELETON: tuple[Path, ...] = (
     STATE_DIR / "changes/archive",
 )
 
-DEFAULT_ASSISTANTS: tuple[str, ...] = ("claude", "cursor", "github", "specline", "codex")
+DEFAULT_ASSISTANTS: tuple[str, ...] = ("claude", "cursor", "github", "context-delta", "codex")
 
 ASSISTANT_TARGETS: dict[str, Path] = {
-    "claude": Path(".claude/commands/specline"),
-    "cursor": Path(".cursor/prompts/specline"),
-    "github": Path(".github/prompts/specline"),
-    "specline": Path("specline/commands"),
+    "claude": Path(".claude/commands/context-delta"),
+    "cursor": Path(".cursor/prompts/context-delta"),
+    "github": Path(".github/prompts/context-delta"),
+    "context-delta": Path("context-delta/commands"),
 }
 
 
@@ -279,7 +279,7 @@ def resolve_codex_prompts(root: Path) -> Path:
 
 def sync_assistant_directories(root: Path, prompts_dir: Path, assistants: Iterable[str]) -> set[str]:
     created: set[str] = set()
-    prompt_files = sorted(prompts_dir.glob("specline-*.md"))
+    prompt_files = sorted(prompts_dir.glob("delta-*.md"))
 
     for assistant in assistants:
         target: Path
@@ -302,16 +302,19 @@ def sync_assistant_directories(root: Path, prompts_dir: Path, assistants: Iterab
     return created
 
 
-def init_palprompt_structure(
+def init_context_delta_structure(
     root: Path | None = None, *, force: bool = False, assistants: Iterable[str] | None = None
 ) -> InitResult:
     root = root or Path.cwd()
     state_dir = root / STATE_DIR
-    legacy_dir = root / LEGACY_STATE_DIR
     assistant_selection = tuple(assistants or DEFAULT_ASSISTANTS)
 
-    if not state_dir.exists() and legacy_dir.exists():
-        shutil.move(str(legacy_dir), str(state_dir))
+    if not state_dir.exists():
+        for legacy in LEGACY_STATE_DIRS:
+            legacy_dir = root / legacy
+            if legacy_dir.exists():
+                shutil.move(str(legacy_dir), str(state_dir))
+                break
 
     result = InitResult(root=state_dir, existing=state_dir.exists())
 
@@ -346,7 +349,9 @@ def refresh_prompts(root: Path | None = None, *, assistants: Iterable[str] | Non
     state_dir = root / STATE_DIR
     prompts_dir = state_dir / "prompts"
     if not prompts_dir.exists():
-        raise FileNotFoundError("specline/prompts directory does not exist. Run 'specline init' first.")
+        raise FileNotFoundError(
+            "context-delta/prompts directory does not exist. Run 'context-delta init' first."
+        )
 
     results = scaffold_prompts(prompts_dir, overwrite=True)
     assistant_dirs = sync_assistant_directories(root, prompts_dir, assistant_selection)

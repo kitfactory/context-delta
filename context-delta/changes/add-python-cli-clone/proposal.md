@@ -1,5 +1,5 @@
 ## Why
-Teams relying on Python tooling want the OpenSpec workflows without adopting the Node.js CLI. Delivering a Python clone keeps AI-driven change management consistent across ecosystems while reducing setup friction for Python-centric repos like `SpecLine`.
+Teams relying on Python tooling want the OpenSpec workflows without adopting the Node.js CLI. Delivering a Python clone keeps AI-driven change management consistent across ecosystems while reducing setup friction for Python-centric repos like `Context Delta`.
 
 ## What Changes
 - Scaffold a new Python project that mirrors OpenSpec’s command surface (`init`, `update`, `list`, `change`, `spec`, `validate`, `archive`, `view`) with click-based CLI ergonomics.
@@ -10,5 +10,5 @@ Teams relying on Python tooling want the OpenSpec workflows without adopting the
 
 ## Impact
 - Affected specs: `python-cli`
-- New codebase: `spec_line` package providing the CLI entry point and supporting modules
+- New codebase: `context_delta` package providing the CLI entry point and supporting modules
 - Tooling: Python build chain (uv or pip), virtual environment instructions, and CI updates to exercise the new CLI

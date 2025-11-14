@@ -1,5 +1,5 @@
 ## 1. Project scaffolding
-- [x] 1.1 Initialize Python package structure (`spec_line/`) with CLI entry (`specline`, alias `palprompt`) and wiring via `pyproject.toml`.
+- [x] 1.1 Initialize Python package structure (`context_delta/`) with CLI entry (`delta`, alias `context-delta`) and wiring via `pyproject.toml`.
 - [x] 1.2 Set up tooling (pytest via `uv add pytest`) and document how to run the test suite.
 
 ## 2. Command surface parity

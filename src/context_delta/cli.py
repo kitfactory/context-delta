@@ -7,7 +7,8 @@ from pathlib import Path
 from .scaffold import (
     DEFAULT_ASSISTANTS,
     InitResult,
-    init_palprompt_structure,
+    STATE_DIR,
+    init_context_delta_structure,
     refresh_prompts,
     update_root_agents_file,
 )
@@ -53,18 +54,18 @@ def determine_assistants(raw: str | None) -> tuple[str, ...]:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="specline",
-        description="SpecLine CLI (alias: palprompt) for managing specline/ workflows",
+        prog="delta",
+        description="Context Delta CLI for managing context-delta/ workflows",
     )
     subparsers = parser.add_subparsers(dest="command")
 
     init_parser = subparsers.add_parser(
-        "init", help="Initialise specline/ directory structure and prompt templates"
+        "init", help="Initialise context-delta/ directory structure and prompt templates"
     )
     init_parser.add_argument(
         "--force",
         action="store_true",
-        help="Overwrite existing specline/ directory if present",
+        help="Overwrite existing context-delta/ directory if present",
     )
     init_parser.add_argument(
         "--path",
@@ -77,13 +78,13 @@ def build_parser() -> argparse.ArgumentParser:
         type=str,
         help=(
             "Comma-separated assistants to install prompts for "
-            "(default: claude,cursor,github,specline,codex; use 'all' or leave empty for interactive prompt)."
+            "(default: claude,cursor,github,context-delta,codex; use 'all' or leave empty for interactive prompt)."
         ),
     )
     init_parser.add_argument(
         "--update-root-agents",
         action="store_true",
-        help="Overwrite the repository root AGENTS.md with a bootstrap that points to specline/AGENTS.md.",
+        help="Overwrite the repository root AGENTS.md with a bootstrap that points to context-delta/AGENTS.md.",
     )
 
     update_parser = subparsers.add_parser(
@@ -110,18 +111,18 @@ def cmd_init(args: argparse.Namespace) -> int:
         print(str(exc), file=sys.stderr)
         return 1
 
-    result: InitResult = init_palprompt_structure(root=args.path, force=args.force, assistants=assistants)
+    result: InitResult = init_context_delta_structure(root=args.path, force=args.force, assistants=assistants)
 
     if result.existing and not args.force:
         print(
-            f"specline/ already exists at {result.root.resolve()}. "
+            f"context-delta/ already exists at {result.root.resolve()}. "
             "Use --force to regenerate.",
             file=sys.stderr,
         )
         return 1
 
     print(
-        f"SpecLine init complete at {result.root.resolve()} "
+        f"Context Delta init complete at {result.root.resolve()} "
         f"(created: {', '.join(sorted(result.created)) or 'none'}, "
         f"migrated: {', '.join(sorted(result.migrated)) or 'none'})"
     )
@@ -146,7 +147,7 @@ def cmd_update(args: argparse.Namespace) -> int:
         return 1
 
     print(
-        f"SpecLine update complete at {(args.path / 'pal').resolve()} "
+        f"Context Delta update complete at {(args.path / STATE_DIR).resolve()} "
         f"(updated: {', '.join(sorted(updated)) or 'none'})"
     )
     return 0
