@@ -10,7 +10,7 @@ Context Delta には英語・日本語合わせて 6 種類のコアテンプレ
 
 ### Concept フェーズ
 - **delta-concept (`delta-concept.md`)**  
-  `docs/concept.md` 向けの最新サマリーを作成します。ワークフローの目的、CLI とプロンプトの責務分担、ローカライズ戦略、`context-delta/` ディレクトリ構成を必ず含めます。
+  `context-delta/concept.md` に内部メモを作成し、`delta-archive` が承認済み内容を `docs/prd.md`（PRD）へ反映します。ワークフローの目的、CLI とプロンプトの責務、ローカライズ方針、`context-delta/` ディレクトリ構成を必ず含めます。
 
 ### Roadmap フェーズ
 - **delta-roadmap (`delta-roadmap.md`)**  
@@ -19,6 +19,10 @@ Context Delta には英語・日本語合わせて 6 種類のコアテンプレ
 ### Propose フェーズ
 - **delta-propose (`delta-propose.md`)**  
   `{change_id}` の proposal / tasks / spec をまとめて作成します。Why / What / Impact と成功指標、番号付き `- [ ]` タスク、ADDED / MODIFIED / REMOVED + `#### Scenario` 形式のデルタを一貫した Markdown として出力し、未解決の質問や依存、`context-delta validate {change_id}` に通すための注意点も含めます。
+
+### Verify フェーズ
+- **delta-verify (`delta-verify.md`)**  
+  PromptCard の Rubric/Regression を読み込み、対象ドキュメントを観点別に採点します。Pass/Borderline/Fail 判定、観点ごとのスコア表、失点理由、Regression セットとの差分、次に取るべき改善アクション（`## Actions`）をまとめ、`context-delta validate --all` などの検証結果も引用して品質ゲートとして利用します。
 
 ### Apply フェーズ
 - **delta-apply (`delta-apply.md`)**  

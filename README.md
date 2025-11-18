@@ -92,7 +92,7 @@ Context Delta が提供する `delta-*.md` は以下の 7 種類です。通常�
 
 | プロンプト | 主な出力内容 | 推奨タイミング |
 |------------|--------------|----------------|
-| `delta-concept` | `docs/concept.md` を `## Concept Summary` → `## CLI vs Prompt Responsibilities` → `## Localisation Strategy` → `## context-delta/ Directory Structure` の構成で更新 | プロジェクト初期 / 大きな方針変更時 |
+| `delta-concept` | `context-delta/concept.md` に Concept Summary / Responsibilities / Localisation / Directory の内部メモを作成。承認後に `delta-archive` で `docs/prd.md`（PRD）へ反映 | プロジェクト初期 / 大きな方針変更時 |
 | `delta-roadmap` | `| Milestone | Scope | Deliverables | Acceptance | Dependencies | Change ID |` の表と `## Notes` で、基礎→応用の細粒度マイルストーンと依存順・リスクを記述 | 変更開始前の計画策定時 |
 | `delta-propose` | proposal / tasks / spec を規定の章構成で作成し、`context-delta validate {change_id}` 実行結果を proposal に追記 | 各 change-id の着手時 |
 | `delta-apply` | Task Status / Commands and Tests / context-delta validate Results / Next Actions の 4 セクションで進捗報告 | 実装中の週次報告・レビュー前 |
@@ -126,7 +126,7 @@ Context Delta はあらかじめ以下の PromptCard を同梱し、成果物の
 PromptCard の構造や運用については `docs/promptcard.md` を参照してください。
 
 ### 全体フロー
-1. **概念整理** – `delta-concept` でプロジェクトの目的や CLI/プロンプトの責務、ローカライズ方針を固め、docs/concept.md を最新化します。
+1. **概念整理** – `delta-concept` でプロジェクトの目的や CLI/プロンプトの責務、ローカライズ方針を `context-delta/concept.md` にまとめ、最終的な PRD (`docs/prd.md`) 反映は `delta-archive` で行います。
 2. **マイルストーン設計** – `delta-roadmap` で機能を基礎→応用の細片に分割し、Milestone 表と依存関係・リスクを明確にします。
 3. **フェーズ実行 (繰り返し)**  
    - `delta-propose` で各フェーズの proposal/tasks/spec を生成し、`context-delta validate` を通した状態にします。  

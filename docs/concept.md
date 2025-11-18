@@ -29,9 +29,10 @@ OpenSpec の価値は「仕様駆動で変更を管理し、AI アシスタン�
 ### プロンプト例（主要セット）
 | プロンプトID | カテゴリ | 役割 / 使いどころ | 引数例 | 備考 |
 |--------------|----------|--------------------|--------|------|
-| `delta-concept` | Concept | `docs/concept.md` の骨子作成やリファイン | なし | ローカライズは内容のみ切り替え（ファイル名は `delta-concept.md`） |
+| `delta-concept` | Concept | `context-delta/concept.md` に骨子をまとめ、最終的な `docs/prd.md` 反映は `delta-archive` で行う | なし | ローカライズは内容のみ切り替え（ファイル名は `delta-concept.md`） |
 | `delta-roadmap` | Roadmap | 機能をマイルストーン単位に分割し、優先順位を整理 | `feature-name` | 例: `delta-roadmap python-cli` |
 | `delta-propose` | Propose | `{change_id}` の proposal / tasks / spec をまとめる | `change-id` | 例: `delta-propose add-python-cli-clone` |
+| `delta-verify` | Verify | PromptCard の Rubric/Regression に沿って対象ドキュメントを採点し、Pass/Borderline/Fail と改善点をまとめる | `target-path` + `promptcard-id` | 例: `delta-verify docs/concept.md pc.doc.product-requirements` |
 | `delta-apply` | Apply | 実装進捗、実行コマンド、検証結果、TODO を共有 | `change-id` | 例: `delta-apply add-python-cli-clone` |
 | `delta-archive` | Archive | アーカイブ前の最終チェック、デルタ、コマンド列挙 | `change-id` | 例: `delta-archive add-python-cli-clone` |
 | `delta-update` | Maintenance | テンプレ同期やローカライズファイルの更新 | なし | `.claude/` など各ツール向けにも展開 |
@@ -41,15 +42,16 @@ OpenSpec の価値は「仕様駆動で変更を管理し、AI アシスタン�
 ## プロンプト仕様とチェック条件
 | プロンプトID | 生成対象 / 作業内容 | 必須項目・チェック条件 | OpenSpec との関係 |
 |--------------|----------------------|----------------------------|--------------------|
-| `delta-concept` | `docs/concept.md` の概要整理。目的・範囲・CLI/プロンプト役割・ローカライズ方針を記述。 | - 見出し構成が維持される<br>- CLI とプロンプトの役割分担/リズムが明文化される<br>- Markdown が崩れない | OpenSpec には同等プロンプトなし。`openspec/AGENTS.md` を参考に新規作成。 |
+| `delta-concept` | `context-delta/concept.md` を更新し、目的・範囲・CLI/プロンプト役割・ローカライズ方針・ディレクトリ構成を整理。docs 反映は `delta-archive` が担当（`docs/prd.md` を生成）。 | - 見出し構成が維持される<br>- CLI とプロンプトの役割分担/リズムが明文化される<br>- Markdown が崩れない | OpenSpec には同等プロンプトなし。`openspec/AGENTS.md` を参考に新規作成。 |
 | `delta-roadmap` | マイルストーン表（M1〜）の作成。スコープ/成果物/完了条件/依存関係/推奨 change-id。 | - 表または箇条書きでマイルストーンを列挙<br>- `delta-propose` に引き継ぐ change-id を提示<br>- 依存や先行条件が書かれる | OpenSpec に近いテンプレなし。計画メモから派生。 |
 | `delta-propose` | `{change_id}` の `proposal.md` / `tasks.md` / `specs/<cap>/spec.md` を同時に下書き。 | - proposal: Why / What / Impact + 成功指標/リスク<br>- tasks: 番号付き `##` と `- [ ]` で担当/依存を記述<br>- spec: ADDED/MODIFIED/REMOVED + `#### Scenario` で現状とデルタを比較し、`context-delta validate` に合格する構造 | OpenSpec の `pal-change` と spec レビューを統合。 |
+| `delta-verify` | PromptCard Rubric に沿ってドキュメントを採点するレビューテンプレ。対象ドキュメントと PromptCard を入力し、観点別スコアと失点理由、改善案、最終判定（Pass/Borderline/Fail）をまとめる。 | - Rubric の各観点を表形式で採点（0–4 などカード指定のスケール）<br>- Regression/Sample の乖離や `context-delta validate --all` 結果を引用<br>- 改善タスクや追試を `## Actions` として列挙し、最終判定を明示 | OpenSpec の verify テンプレに相当。PromptCard 情報を Source of Truth とする。 |
 | `delta-apply` | Apply 期間のステータスレポート。タスク進捗、実行コマンド、テスト結果、コード差分、検証結果、次アクション。 | - `tasks.md` の更新内容を列挙<br>- 実行したコマンドと結果を記載（成功/失敗を明示）<br>- 直近の `context-delta validate` （または `--all`）と対処案を含める | OpenSpec の build / validate テンプレ統合版。 |
 | `delta-archive` | アーカイブ前の最終チェック。タスク完了、デルタ摘要、必要コマンド、フォローアップ。 | - 未完了タスクがあれば差し戻し指示<br>- 仕様に反映するデルタとドキュメント更新箇所を列挙<br>- 実行するコマンド列（archive、git、tag 等）を順序付きで提示 | OpenSpec の archive テンプレを Context Delta CLI 向けに最適化。 |
 | `delta-update` | テンプレとローカライズファイルの更新手順。 | - 対象ディレクトリ別に追加/更新/削除項目を列挙<br>- バックアップ/差分確認/テストの実施手順を記載 | OpenSpec の update テンプレをベースにしつつ Context Delta 固有のコピー先を追加。 |
 
 ## ロードマップに沿った進め方
-1. **Concept の同期**: `delta-concept` で vision・範囲・ローカライズ方針を整理し、AI/人間が共有する土台を作る。
+1. **Concept の同期**: `delta-concept` で vision・範囲・ローカライズ方針を `context-delta/concept.md` に整理し、AI/人間が共有する土台を作る（公開 docs への反映は `delta-archive` により `docs/prd.md` へ出力）。
 2. **Roadmap の具体化**: `delta-roadmap <feature>` を用いてマイルストーン、完了条件、推奨 change-id を決める。
 3. **Propose フェーズ**: 各マイルストーンを独立した `{change_id}` として `delta-propose {change_id}` を実行し、proposal / tasks / spec をまとめる。必要に応じて再実行して差分を蓄積。
 4. **Apply フェーズ**: 実装を進めながら定期的に `delta-apply {change_id}` を更新し、タスクの進行状況、実行コマンド、`context-delta validate` 結果を共有。ここで品質ゲートも通過させる。

@@ -1,9 +1,12 @@
 # delta-apply (EN)
 
-Draft an Apply-phase status report for `{change_id}` with these sections:
-1. `## Task Status` – mirror `context-delta/changes/{change_id}/tasks.md`, listing completed/blocked items.
-2. `## Commands and Tests` – bullet list `- command: result` covering `context-delta validate`, unit tests, linters, etc.
-3. `## context-delta validate Results` – summarise the latest run (date, success/failure, key errors).
-4. `## Next Actions` – remaining TODOs, risks, and support needed.
+Progress report for `{change_id}` (single purpose). Keep continuity with Concept/Roadmap/proposal and stay within scope.
 
-Ensure the report references commit hash or PR if available, and that `context-delta validate {change_id}` was executed before sending the update.
+1) `## Purpose & Scope` – restate the purpose, `scope_level`, `continuity_score` (reason), targeted doc_instances, and excluded scope
+2) `## Task Status` – map to `context-delta/changes/{change_id}/tasks.md` with done/remaining/blocked
+3) `## Changes by Doc/Code/Test` – summarize updates per doc_instance / code / tests for this purpose
+4) `## Commands and Tests` – `- command: result` for `context-delta validate`, unit/integration tests, lint, build
+5) `## Continuity & Scope Check` – confirm no drift vs proposal/Concept/Roadmap; note any deviations or required upstream updates
+6) `## Next Actions` – remaining tasks, risks, support needed
+
+Run `context-delta validate {change_id}` before reporting and include the latest outcome. Use UTF-8 + LF. If new purposes surface, spin a new change_id instead of mixing scopes.
