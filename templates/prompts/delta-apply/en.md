@@ -1,12 +1,30 @@
 # delta-apply (EN)
 
-Progress report for `{change_id}` (single purpose). Keep continuity with Concept/Roadmap/proposal and stay within scope.
+For `delta apply`. For a single-purpose delta, propose per-doc_instance changes with before/after/patch.
 
-1) `## Purpose & Scope` – restate the purpose, `scope_level`, `continuity_score` (reason), targeted doc_instances, and excluded scope
-2) `## Task Status` – map to `context-delta/changes/{change_id}/tasks.md` with done/remaining/blocked
-3) `## Changes by Doc/Code/Test` – summarize updates per doc_instance / code / tests for this purpose
-4) `## Commands and Tests` – `- command: result` for `context-delta validate`, unit/integration tests, lint, build
-5) `## Continuity & Scope Check` – confirm no drift vs proposal/Concept/Roadmap; note any deviations or required upstream updates
-6) `## Next Actions` – remaining tasks, risks, support needed
+## Inputs
+- Output of `delta propose` (delta_id, intent, doc_instances, promptcard_id, verify_promptcard_id)
+- Current content of each target doc_instance (`path`)
+- Corresponding PromptCard (Markdown `.md`, mode generate/revise)
 
-Run `context-delta validate {change_id}` before reporting and include the latest outcome. Use UTF-8 + LF. If new purposes surface, spin a new change_id instead of mixing scopes.
+## Required output
+```jsonc
+{
+  "delta_id": "delta-001",
+  "results": [
+    {
+      "doc_id": "req-main",
+      "doc_type": "req.usdm",
+      "path": "docs/requirements/usdm.md",
+      "before": "(full text before)",
+      "after": "(full text after)",
+      "patch": "(Unified Diff)"
+    }
+  ]
+}
+```
+
+## Rules
+- Keep changes minimal to achieve the intent; avoid large restructures.
+- Follow `promptcard_id` to maintain doc_type-appropriate structure and terminology.
+- If cross-scope edits are needed, briefly note that a new delta is recommended, but keep the output structure above.

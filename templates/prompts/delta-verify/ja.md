@@ -1,13 +1,37 @@
 # delta-verify (JA)
 
-`{change_id}` の検証レポートを作成します。**1つの目的** に対する成果物を PromptCard の Rubric で採点し、連続性を確認してください。
+`delta verify` 用。1つの delta の適用結果が intent と doc_type / PromptCard の期待に整合しているかを確認する。
 
-セクション:
-- `## Summary` – 目的、`scope_level`、`continuity_score`（理由）、対象 doc_instance、使用した PromptCard
-- `## Continuity & Scope` – Concept/Roadmap/proposal との整合、drift リスク、除外スコープ
-- `## Rubric Evaluation` – doc_instance/PromptCard ごとに評価観点を列挙し、Pass/Borderline/Fail（またはスコア）と短いコメント
-- `## Issues & Risks` – 不足・矛盾・欠陥。アーカイブ/リリースを止めるかどうかを明示
-- `## Recommendations / Next Delta` – 改善策と、必要なら次の delta として分離すべき事項
-- `## Validation` – 実行したコマンド（`context-delta validate --all`、テスト等）と結果
+## 入力想定
+- `delta apply` の結果（before/after/patch）
+- `delta propose` の intent
+- 評価用 PromptCard（Markdown `.md`、mode は evaluate/review）
 
-別の目的が見つかった場合はスコープを増やさず新しい change_id として扱ってください。UTF-8/LF を守って記述します。
+## 出力フォーマット（必須）
+```jsonc
+{
+  "delta_id": "delta-001",
+  "verification": {
+    "issues": [
+      {
+        "doc_id": "req-main",
+        "loc": "line 120-150",
+        "issue": "元の要求より範囲が広がっています",
+        "note": "理由や背景を簡潔に",
+        "severity": "high"
+      }
+    ],
+    "suggested_followup": [
+      {
+        "type": "new_delta_propose",
+        "reason": "スコープ修正用の delta を追加してください"
+      }
+    ]
+  }
+}
+```
+
+## ルール
+- 構文ではなく意味レベルの整合性に集中する。Rubric に基づき必須要素の抜け・矛盾を検出する。
+- 不明点はエラーではなく質問として `suggested_followup` に載せる。
+- 1 delta に収まらない課題が見つかった場合は、新しい delta を提案する。

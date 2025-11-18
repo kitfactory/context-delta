@@ -1,13 +1,31 @@
 # delta-archive (EN)
 
-Archive `{change_id}` only after the **single purpose** is complete and aligned with Concept/Roadmap/proposal.
+For `delta archive`. Capture one delta’s essence so the next `delta propose` can reuse it. Keep outputs minimal; deep knowledge curation is out of scope.
 
-Required sections:
-- `## Completion Check` – confirm `context-delta/changes/{change_id}/tasks.md` has no unchecked items; if anything remains, spin a new change_id and note it
-- `## Continuity / Drift` – state how updates reflect Concept/Roadmap/prior deltas and whether upstream docs need follow-up (list them)
-- `## Changes Summary` – table/bullets per doc_instance/code/test (path, ADDED/MODIFIED/REMOVED, short description)
-- `## Verification` – commands with timestamps (`context-delta validate --all`, tests, lint, build) and outcomes
-- `## Final Commands` – ordered list to run (e.g., `context-delta archive {change_id}`, git commit/tag, docs build/publish)
-- `## Release Notes / Follow-ups` – release notes, tickets, or next deltas required
+## Inputs
+- Intent / doc_instances from `delta propose`
+- before/after/patch from `delta apply`
+- Result of `delta verify` (if any)
+- Used PromptCard IDs
 
-Use UTF-8 + LF. If new scope appears during archiving, stop and create a new change_id rather than mixing purposes.
+## Output (example layout)
+```
+delta_archive/2025-11-18_142300/
+  summary.md
+  apply.patch
+  doc_instances.json
+```
+
+### summary.md
+- A few lines on what/why/how changed; state that the purpose was contained within one delta.
+- Note key verify findings and whether they were addressed.
+
+### apply.patch
+- Unified Diff as produced by `delta apply`.
+
+### doc_instances.json
+- Simple JSON recording target doc_instances and the `promptcard_id` / `verify_promptcard_id` used.
+
+## Rules
+- If tasks remain or goals diverge, do not archive—split into a new delta instead.
+- Keep this archive lean; richer feedback/knowledge belongs to another system.

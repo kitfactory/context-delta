@@ -1,13 +1,31 @@
 # delta-archive (JA)
 
-`{change_id}` をアーカイブする前に、**1目的で完了** していることと Concept/Roadmap/proposal との連続性を確認してください。
+`delta archive` 用。1 delta の成果をエッセンスとして残し、次回の `delta propose` で参照できるようにする。詳細なナレッジ蓄積は別プロジェクトとし、最小セットのみを出力する。
 
-必須セクション:
-- `## Completion Check` – `context-delta/changes/{change_id}/tasks.md` の未完タスクがゼロか確認。残る場合は新しい change_id に切り出し、理由を記載
-- `## Continuity / Drift` – Concept/Roadmap/既存deltaへどう反映したか、上流ドキュメントの追従が必要なら列挙
-- `## Changes Summary` – doc_instance/コード/テストごとにファイルと ADDED/MODIFIED/REMOVED、概要を表または箇条書きで整理
-- `## Verification` – 実行コマンドと日時（`context-delta validate --all`、テスト、lint、build）と結果を記録
-- `## Final Commands` – 実行順に記載（例: `context-delta archive {change_id}`、git commit/tag、docs build/publish）
-- `## Release Notes / Follow-ups` – リリースノート、フォローアップチケット、次に回す delta があれば明記
+## 入力想定
+- `delta propose` の intent / doc_instances
+- `delta apply` の before/after/patch
+- `delta verify` の結果（あれば）
+- 使用した PromptCard ID
 
-UTF-8/LF を維持し、アーカイブ中に新たな目的が混じる場合は中断して change_id を分けてください。LANG が `ja` の場合は docs/ に日英 2 文書を生成し、英語版には主要変更点を英語で要約してください。
+## 出力（ファイル構成例）
+```
+delta_archive/2025-11-18_142300/
+  summary.md
+  apply.patch
+  doc_instances.json
+```
+
+### summary.md
+- 何を・なぜ・どう変えたかを数行で要約（1目的に収まっているかを明示）
+- verify の主な指摘と対応状況があれば記載
+
+### apply.patch
+- 実際に適用した Unified Diff（`delta apply` の patch をそのまま保存）
+
+### doc_instances.json
+- 対象 doc_instance と使用した `promptcard_id` / `verify_promptcard_id` を記録するシンプルな JSON
+
+## ルール
+- 未完タスクや別目的が混ざる場合はアーカイブせず、新しい delta を切る。
+- 大規模なナレッジや feedback はここでは扱わない（別プロジェクトで管理）。

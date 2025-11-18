@@ -1,13 +1,37 @@
 # delta-verify (EN)
 
-Produce a verification report for `{change_id}` focused on **one purpose**. Use PromptCard rubrics to score the work and check continuity.
+For `delta verify`. Check whether one delta’s apply result aligns with the intent and the doc_type / PromptCard expectations.
 
-Sections:
-- `## Summary` – purpose, `scope_level`, `continuity_score` (reason), targeted doc_instances, PromptCards used
-- `## Continuity & Scope` – alignment with Concept/Roadmap/proposal, drift risks, and any excluded scope
-- `## Rubric Evaluation` – per doc_instance/PromptCard, list criteria with Pass/Borderline/Fail (or score) and short notes
-- `## Issues & Risks` – defects, gaps, contradictions; note if they block archive/release
-- `## Recommendations / Next Delta` – improvements, follow-up deltas needed to resolve findings
-- `## Validation` – commands run (`context-delta validate --all`, tests) with outcomes
+## Inputs
+- Output of `delta apply` (before/after/patch)
+- Intent from `delta propose`
+- Evaluation PromptCard (Markdown `.md`, mode evaluate/review)
 
-Keep a single-purpose lens: if issues reveal another purpose, open a new change_id instead of expanding this delta. Use UTF-8 + LF.
+## Required output
+```jsonc
+{
+  "delta_id": "delta-001",
+  "verification": {
+    "issues": [
+      {
+        "doc_id": "req-main",
+        "loc": "line 120-150",
+        "issue": "Scope expanded beyond the original intent.",
+        "note": "Short rationale",
+        "severity": "high"
+      }
+    ],
+    "suggested_followup": [
+      {
+        "type": "new_delta_propose",
+        "reason": "Add a delta to fix the scope drift."
+      }
+    ]
+  }
+}
+```
+
+## Rules
+- Focus on semantic consistency, using the PromptCard rubric to find missing/contradictory elements.
+- Treat unknowns as questions; record them in `suggested_followup` instead of failing hard.
+- If an issue does not fit the current delta scope, recommend a new delta.

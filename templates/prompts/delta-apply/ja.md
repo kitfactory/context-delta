@@ -1,12 +1,30 @@
 # delta-apply (JA)
 
-`{change_id}` の進捗レポート（1目的に限定）を作成します。Concept/Roadmap/proposal と連続性を保ち、スコープを逸脱しないこと。
+`delta apply` 用。指定された delta（1目的）について、doc_instance ごとの before/after/patch を提案する。
 
-1) `## Purpose & Scope` – 目的、`scope_level`、`continuity_score`（理由）、対象 doc_instance、除外範囲を記載
-2) `## Task Status` – `context-delta/changes/{change_id}/tasks.md` と対応付けて完了/残り/ブロックを整理
-3) `## Changes by Doc/Code/Test` – 目的に沿った文書/コード/テストの更新内容をまとめる
-4) `## Commands and Tests` – `- コマンド: 結果` 形式で `context-delta validate`、テスト、lint、build を列挙
-5) `## Continuity & Scope Check` – proposal/Concept/Roadmap からの drift がないか、必要な上流更新がないか確認し、逸脱があれば明記
-6) `## Next Actions` – 残タスク、リスク、必要なサポート
+## 入力想定
+- `delta propose` の結果（delta_id、intent、doc_instances、promptcard_id、verify_promptcard_id）
+- 対象 doc_instance の現行内容（ファイルパスは `path` ）
+- 対応する PromptCard（Markdown `.md`。`mode` は generate/revise）
 
-レポート前に `context-delta validate {change_id}` を実行し、最新の結果を含めてください。UTF-8/LF を維持し、新たな目的が出たら change_id を分けてください。
+## 出力フォーマット（必須）
+```jsonc
+{
+  "delta_id": "delta-001",
+  "results": [
+    {
+      "doc_id": "req-main",
+      "doc_type": "req.usdm",
+      "path": "docs/requirements/usdm.md",
+      "before": "(適用前の全文)",
+      "after": "(適用後の全文)",
+      "patch": "(Unified Diff)"
+    }
+  ]
+}
+```
+
+## ルール
+- 変更は目的達成に必要な最小限にとどめ、大規模な再構成は避ける。
+- `promptcard_id` に従い、doc_type にふさわしい構成と語彙を保つ。
+- スコープをまたぐ修正が必要な場合は、別 delta を提案するよう `note` を短く添えてもよいが、出力構造は上記のまま。
