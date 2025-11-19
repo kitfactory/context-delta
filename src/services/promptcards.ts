@@ -69,10 +69,12 @@ export async function syncPromptCardRegistry({
 
   cards.sort((a, b) => a.id.localeCompare(b.id, "en"));
 
+  const cardsIndexDir = join(rootPath, STATE_DIR, "promptcards");
+  await fs.ensureDir(cardsIndexDir);
   const docsDir = join(rootPath, "docs", "promptcards");
   await fs.ensureDir(docsDir);
   const generatedAt = new Date().toISOString();
-  const jsonPath = join(docsDir, "registry.json");
+  const jsonPath = join(cardsIndexDir, "index.json");
   const markdownPath = join(docsDir, "registry.md");
 
   const registryPayload = {
@@ -81,6 +83,8 @@ export async function syncPromptCardRegistry({
   };
 
   await fs.writeJson(jsonPath, registryPayload, { spaces: 2 });
+  // docs 用のレジストリも維持
+  await fs.writeJson(join(docsDir, "registry.json"), registryPayload, { spaces: 2 });
   await fs.writeFile(markdownPath, buildMarkdown(cards, generatedAt), "utf8");
 
   return {
