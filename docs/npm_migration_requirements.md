@@ -3,7 +3,7 @@
 Python 版 Context Delta CLI の挙動と関連ドキュメントを棚卸しし、npm 版で再現・維持すべき仕様をまとめる。
 
 ## 1. CLI / テンプレ / テストから判明した要件
-- コマンド構成: `delta init` / `delta update`（`context-delta` エイリアスあり）。`init` は `--force`, `--path`, `--assistants`, `--update-root-agents` を受け取り、`update` は `--path`, `--assistants` を受け取る（src/context_delta/cli.py）。
+- コマンド構成: `delta init` / `delta update` / `delta card sync`（`context-delta` エイリアスあり）。`init` は `--force`, `--path`, `--assistants`, `--update-root-agents` を受け取り、`update` は `--path`, `--assistants` を受け取る（src/context_delta/cli.py）。
 - `--assistants` 省略時は `DEFAULT_ASSISTANTS = (claude, cursor, github, context-delta, codex)` を対象とし、未指定かつ対話可能な端末ならインタラクティブに選択肢を提示する。`all` または空入力で全選択（src/context_delta/cli.py）。
 - `STATE_DIR = context-delta`、`DIRECTORY_SKELETON`（prompts/specs/changesなど）を生成し、`.gitkeep` を仕様とする。`LEGACY_STATE_DIRS = (specline, pal)` から自動移行（src/context_delta/scaffold.py）。
 - `LANG` またはロケールから言語コードを推定し、`PROMPT_TEMPLATES` の `en` / `ja` を切り替えて `delta-*.md` を展開。言語キー不一致時は英語フォールバック（src/context_delta/scaffold.py）。
@@ -16,7 +16,7 @@ Python 版 Context Delta CLI の挙動と関連ドキュメントを棚卸しし
   3. `openspec/` からの移行が行われる  
   4. 選択したアシスタントのディレクトリだけが生成される  
   5. `delta update` がテンプレ最新化とアシスタント再同期を行う  
-  6. `--update-root-agents` がルート `AGENTS.md` を置き換える
+  6. `--update-root-agents` がルート `AGENTS.md` を置き換える  
 
 ## 2. ドキュメントから読み取れる期待仕様
 - README.md では pip/uv でのインストール後に `delta --help` を実行する流れを案内。npm 版でも `delta --help`（`npm install -g context-delta` が前提）への読み替えが必要。
@@ -31,6 +31,6 @@ Python 版 Context Delta CLI の挙動と関連ドキュメントを棚卸しし
 - `docs/concept.md` に「CLI 操作は `delta init` / `delta update` のみ」「init 時の対話選択」の方針が記載されているため、npm 版でも CLI のミニマリズムとユーザーフローを変えないこと。
 - `docs/generation.md` ではテンプレ拡散先、`delta update` の役割、`CODEX_HOME` の扱いが明文化されている。npm 化後も同じディレクトリにファイルを配置する必要がある。
 - `docs/prompt_review.md` では `delta-*.md` が英語/日本語の本文を持ち、インストール時に単一言語へ展開する旨が説明されているため、テンプレ配布仕様を維持する。
-- README の全体フロー（delta-concept→roadmap→propose→apply→archive→update）やテンプレ一覧も引き続き正しい状態に保つ必要がある。
+- README の全体フロー（propose→apply→verify→archive、list/delete 含む）やテンプレ一覧も引き続き正しい状態に保つ必要がある。
 
 上記内容を npm 実装とドキュメント更新に反映すること。
