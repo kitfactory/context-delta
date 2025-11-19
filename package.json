@@ -1,6 +1,6 @@
 {
   "name": "context-delta",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Context Delta CLI for managing context-delta/ workflows (Node.js port)",
   "license": "MIT",
   "type": "module",
