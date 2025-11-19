@@ -16,6 +16,8 @@ For `delta propose`. Enumerate **one-purpose delta candidates** keyed by doc_typ
       "id": "delta-001",
       "title": "Concise goal",
       "intent": "Why we do this, in one sentence",
+      "scope_note": "What is in/out of scope for this delta",
+      "continuity_note": "Overlap/contrast with recent deltas",
       "doc_instances": [
         {
           "doc_id": "req-main",
@@ -37,5 +39,7 @@ For `delta propose`. Enumerate **one-purpose delta candidates** keyed by doc_typ
 - One delta = one purpose. Do not propose large restructures or mixed goals.
 - Infer doc_type from the PromptCard index; prefer the minimal set (req.usdm / spec.api / design.arch_overview / test.plan / ops.runbook / delta.summary).
 - If proposing a doc_type not present in the project, add a short rationale.
+- Always set `promptcard_id` and `verify_promptcard_id` per doc_instance; if missing in the index, state that a new card is needed.
+- Always fill `scope_note` and `continuity_note`; if scope is too broad or overlaps, push it to `next_steps` as a follow-up delta.
 - With `--bootstrap`, also include `doc_type_plan` to suggest which doc_type + PromptCard pairs to adopt.
 - Keep the number of proposals minimal; reflect priority in `next_steps.recommended_delta_ids`.
