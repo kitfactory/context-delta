@@ -5,6 +5,7 @@ import { Command } from "commander";
 
 import { determineAssistants } from "../src/services/assistants.js";
 import { initContextDeltaStructure, refreshPrompts, STATE_DIR, updateRootAgentsFile } from "../src/services/context.js";
+import { deleteDelta, listDeltas } from "../src/services/delta.js";
 import { syncPromptCardRegistry } from "../src/services/promptcards.js";
 import type { AssistantName } from "../src/types.js";
 
@@ -106,6 +107,43 @@ export async function main(argv = process.argv): Promise<void> {
         console.log(
           `PromptCard registry updated (${result.cards.length} cards -> ${resolve(result.markdownPath)}, ${resolve(result.jsonPath)})`,
         );
+      } catch (error) {
+        console.error(error instanceof Error ? error.message : error);
+        process.exitCode = 1;
+      }
+    });
+
+  program
+    .command("list")
+    .description("List un-archived deltas (proposed/apply-in-progress/verify-in-progress)")
+    .option("--path <path>", "Target project directory (default: current working directory)")
+    .action(async (options) => {
+      const targetPath = resolve(options.path ?? process.cwd());
+      try {
+        const deltas = await listDeltas(targetPath);
+        if (!deltas.length) {
+          console.log("No deltas found.");
+          return;
+        }
+        for (const delta of deltas) {
+          console.log(`${delta.id} | ${delta.status}${delta.title ? ` | ${delta.title}` : ""}`);
+        }
+      } catch (error) {
+        console.error(error instanceof Error ? error.message : error);
+        process.exitCode = 1;
+      }
+    });
+
+  program
+    .command("delete")
+    .description("Delete a proposed delta (propose-only; refuses if apply/verify exists)")
+    .argument("<delta-id>", "Delta ID to delete (directory under context-delta/changes)")
+    .option("--path <path>", "Target project directory (default: current working directory)")
+    .action(async (deltaId, options) => {
+      const targetPath = resolve(options.path ?? process.cwd());
+      try {
+        await deleteDelta(deltaId, targetPath);
+        console.log(`Delta '${deltaId}' deleted from ${join(targetPath, STATE_DIR, "changes")}.`);
       } catch (error) {
         console.error(error instanceof Error ? error.message : error);
         process.exitCode = 1;
