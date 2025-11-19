@@ -41,5 +41,6 @@ For `delta propose`. Enumerate **one-purpose delta candidates** keyed by doc_typ
 - If proposing a doc_type not present in the project, add a short rationale.
 - Always set `promptcard_id` and `verify_promptcard_id` per doc_instance; if missing in the index, state that a new card is needed.
 - Always fill `scope_note` and `continuity_note`; if scope is too broad or overlaps, push it to `next_steps` as a follow-up delta.
+- If source code changes are involved, enumerate required tests (key commands or coverage) in `next_steps`.
 - With `--bootstrap`, also include `doc_type_plan` to suggest which doc_type + PromptCard pairs to adopt.
 - Keep the number of proposals minimal; reflect priority in `next_steps.recommended_delta_ids`.
