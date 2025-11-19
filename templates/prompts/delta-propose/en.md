@@ -42,5 +42,6 @@ For `delta propose`. Enumerate **one-purpose delta candidates** keyed by doc_typ
 - Always set `promptcard_id` and `verify_promptcard_id` per doc_instance; if missing in the index, state that a new card is needed.
 - Always fill `scope_note` and `continuity_note`; if scope is too broad or overlaps, push it to `next_steps` as a follow-up delta.
 - If source code changes are involved, enumerate required tests (key commands or coverage) in `next_steps`.
+- If a document will be updated, add a task to check consistency with related doc_types (e.g., requirements → API/spec/test plan).
 - With `--bootstrap`, also include `doc_type_plan` to suggest which doc_type + PromptCard pairs to adopt.
 - Keep the number of proposals minimal; reflect priority in `next_steps.recommended_delta_ids`.

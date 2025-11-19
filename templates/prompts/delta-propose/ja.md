@@ -42,5 +42,6 @@
 - `promptcard_id` と `verify_promptcard_id` を doc_instance ごとに必ず指定し、一覧にない場合は「新規カードが必要」と明示する。
 - `scope_note` と `continuity_note` を必ず記載し、過大スコープや重複は `next_steps` で follow-up delta として分ける。
 - ソースコード変更を伴う場合は、実施すべきテスト（観点や主要コマンド）を `next_steps` などで明示する。
+- 文書を更新するタスクが含まれる場合は、当該 doc_type に関連する文書との整合性確認タスクも追加する（例: 要求変更があれば API/spec/テスト計画の整合を確認など）。
 - `--bootstrap` 指定時は、`doc_type_plan` を添えて採用すべき doc_type と PromptCard の組み合わせを提案する。
 - 提案数は必要最小限に絞り、優先順は `next_steps.recommended_delta_ids` に反映する。
