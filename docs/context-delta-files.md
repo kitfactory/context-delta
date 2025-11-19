@@ -13,12 +13,14 @@
 
 ## propose
 - 入力: プロジェクトファイル + `promptcards/index.json`
-- 出力: `context-delta/changes/{delta-id}/propose.json`
+- 出力: `context-delta/changes/{delta-id}/propose.json`（このファイルが各 delta の「index」に相当）
   - 例: `{ "id": "delta-001", "title": "...", "intent": "...", "doc_instances": [{ "doc_id": "...", "doc_type": "...", "path": "...", "promptcard_id": "...", "verify_promptcard_id": "..." }], "next_steps": { "recommended_delta_ids": [...] } }`
 - レジストリ: 内部的に未アーカイブ delta の `id/title/status` を保持（例: `delta_index.json` 想定）
-- 任意（企画メモ）: OpenSpec 互換で詳細な企画メモを残したい場合、`context-delta/changes/{delta-id}/proposal.md` を置いてもよい（内容は自由記述）。JSONとの差分を避けるため、仕様上の基準は `propose.json` を正とする。
-- 任意（詳細設計メモ）: OpenSpec 互換で詳細な仕様を残したい場合、`context-delta/specs/{delta-id}/spec.md` を作成し、`## ADDED` / `## MODIFIED` / `## REMOVED` と `#### Scenario` で振る舞いを記述する。
-- 任意（作業タスク）: 進捗を可視化したい場合、`context-delta/changes/{delta-id}/tasks.md` に `- [ ]` 形式でタスクを管理する。
+- フォルダ構造（例）: `context-delta/changes/{delta-id}/` に以下をまとめる
+  - `propose.json`（必須）
+  - `proposal.md`（任意・人間向け企画メモ。正本は propose.json）
+  - `tasks.md`（任意・`- [ ]` 形式で進捗管理）
+  - `spec.md`（任意・詳細仕様。`## ADDED/MODIFIED/REMOVED` と `#### Scenario` 推奨。配置先は `{delta-id}/spec.md` でも `context-delta/specs/{delta-id}/spec.md` でも可）
 
 ## apply
 - 入力: `propose.json` と対象 doc_instance の現行内容
