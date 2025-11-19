@@ -28,3 +28,4 @@
 - 変更は目的達成に必要な最小限にとどめ、大規模な再構成は避ける。
 - `promptcard_id` に従い、doc_type にふさわしい構成と語彙を保つ。
 - スコープをまたぐ修正が必要な場合は、別 delta を提案するよう `note` を短く添えてもよいが、出力構造は上記のまま。
+- 入出力の保存先は `context-delta/changes/{delta-id}/`。`propose.json` を参照し、結果は `apply.json` として同フォルダに保存する。

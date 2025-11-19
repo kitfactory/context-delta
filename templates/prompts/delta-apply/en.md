@@ -28,3 +28,4 @@ For `delta apply`. For a single-purpose delta, propose per-doc_instance changes 
 - Keep changes minimal to achieve the intent; avoid large restructures.
 - Follow `promptcard_id` to maintain doc_type-appropriate structure and terminology.
 - If cross-scope edits are needed, briefly note that a new delta is recommended, but keep the output structure above.
+- Read inputs from `context-delta/changes/{delta-id}/propose.json` and save the result as `apply.json` in the same folder.
