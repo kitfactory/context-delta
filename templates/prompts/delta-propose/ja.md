@@ -45,5 +45,6 @@
 - ソースコード変更を伴う場合は、実施すべきテスト（観点や主要コマンド）を `next_steps` などで明示する。
 - 文書を更新するタスクが含まれる場合は、当該 doc_type に関連する文書との整合性確認タスクも追加する（例: 要求変更があれば API/spec/テスト計画の整合を確認など）。
 - 意図や前提に不明点があれば、`questions_for_human` に列挙し、致命的な不明点が解消されるまで新規 delta を出さず質問のみ返す。
+- 出力後は `context-delta/changes/{delta-id}/` フォルダを用意し、`propose.json` を保存する（任意で proposal.md / tasks.md / spec.md を同フォルダに置いてもよい）。
 - `--bootstrap` 指定時は、`doc_type_plan` を添えて採用すべき doc_type と PromptCard の組み合わせを提案する。
 - 提案数は必要最小限に絞り、優先順は `next_steps.recommended_delta_ids` に反映する。

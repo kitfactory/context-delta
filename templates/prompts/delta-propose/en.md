@@ -45,5 +45,6 @@ For `delta propose`. Enumerate **one-purpose delta candidates** keyed by doc_typ
 - If source code changes are involved, enumerate required tests (key commands or coverage) in `next_steps`.
 - If a document will be updated, add a task to check consistency with related doc_types (e.g., requirements → API/spec/test plan).
 - If intent or assumptions are unclear, list questions in `questions_for_human` and, if blocking, return questions only (do not emit new deltas until clarified).
+- After output, create `context-delta/changes/{delta-id}/` and save `propose.json` there (optionally add proposal.md / tasks.md / spec.md in the same folder).
 - With `--bootstrap`, also include `doc_type_plan` to suggest which doc_type + PromptCard pairs to adopt.
 - Keep the number of proposals minimal; reflect priority in `next_steps.recommended_delta_ids`.
