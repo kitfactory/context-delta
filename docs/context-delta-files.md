@@ -16,6 +16,7 @@
 - 出力: `context-delta/changes/{delta-id}/propose.json`
   - 例: `{ "id": "delta-001", "title": "...", "intent": "...", "doc_instances": [{ "doc_id": "...", "doc_type": "...", "path": "...", "promptcard_id": "...", "verify_promptcard_id": "..." }], "next_steps": { "recommended_delta_ids": [...] } }`
 - レジストリ: 内部的に未アーカイブ delta の `id/title/status` を保持（例: `delta_index.json` 想定）
+- 任意（企画メモ）: OpenSpec 互換で詳細な企画メモを残したい場合、`context-delta/changes/{delta-id}/proposal.md` を置いてもよい（内容は自由記述）。JSONとの差分を避けるため、仕様上の基準は `propose.json` を正とする。
 - 任意（詳細設計メモ）: OpenSpec 互換で詳細な仕様を残したい場合、`context-delta/specs/{delta-id}/spec.md` を作成し、`## ADDED` / `## MODIFIED` / `## REMOVED` と `#### Scenario` で振る舞いを記述する。
 - 任意（作業タスク）: 進捗を可視化したい場合、`context-delta/changes/{delta-id}/tasks.md` に `- [ ]` 形式でタスクを管理する。
 
