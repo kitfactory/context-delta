@@ -2,6 +2,13 @@
 
 すべての notable な変更はこのファイルで管理します。バージョン付けは `docs/npm-release.md` の手順に従い、`npm version` と Git タグで更新してください。
 
+## [0.0.7] - 2025-11-14
+
+### Added
+- delta list/delete コマンドと対応するカスタムプロンプトを追加し、未アーカイブの delta 管理を簡易化。
+- PromptCard インデックスの出力先を `context-delta/promptcards/index.json` に統一。
+- propose/apply/verify/archive プロンプトを現行フォルダ構造前提に整理し、粒度・連続性・テスト・関連文書整合・不明点質問のガードレールを強化。
+
 ## [0.0.6] - 2025-11-14
 
 ### Fixed
