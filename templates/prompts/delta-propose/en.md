@@ -30,7 +30,8 @@ For `delta propose`. Enumerate **one-purpose delta candidates** keyed by doc_typ
     }
   ],
   "next_steps": {
-    "recommended_delta_ids": ["delta-001"]
+    "recommended_delta_ids": ["delta-001"],
+    "questions_for_human": ["List clarifying questions here if any"]
   }
 }
 ```
@@ -43,5 +44,6 @@ For `delta propose`. Enumerate **one-purpose delta candidates** keyed by doc_typ
 - Always fill `scope_note` and `continuity_note`; if scope is too broad or overlaps, push it to `next_steps` as a follow-up delta.
 - If source code changes are involved, enumerate required tests (key commands or coverage) in `next_steps`.
 - If a document will be updated, add a task to check consistency with related doc_types (e.g., requirements → API/spec/test plan).
+- If intent or assumptions are unclear, list questions in `questions_for_human` and do not guess.
 - With `--bootstrap`, also include `doc_type_plan` to suggest which doc_type + PromptCard pairs to adopt.
 - Keep the number of proposals minimal; reflect priority in `next_steps.recommended_delta_ids`.
