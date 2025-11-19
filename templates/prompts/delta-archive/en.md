@@ -7,6 +7,7 @@ For `delta archive`. Capture one delta’s essence so the next `delta propose` c
 - before/after/patch from `delta apply`
 - Result of `delta verify` (if any)
 - Used PromptCard IDs
+- Assume inputs are stored under `context-delta/changes/{delta-id}/` (read `propose.json` / `apply.json` / `verify.json` there).
 
 ## Output (example layout)
 ```
@@ -29,3 +30,4 @@ delta_archive/2025-11-18_142300/
 ## Rules
 - If tasks remain or goals diverge, do not archive—split into a new delta instead.
 - Keep this archive lean; richer feedback/knowledge belongs to another system.
+- Save outputs under `delta_archive/{timestamp}/` and reference the corresponding data from `context-delta/changes/{delta-id}/`.

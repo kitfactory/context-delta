@@ -6,6 +6,7 @@
 - `delta apply` の結果（before/after/patch）
 - `delta propose` の intent
 - 評価用 PromptCard（Markdown `.md`、mode は evaluate/review）
+- いずれも `context-delta/changes/{delta-id}/` に保存されている前提で、`propose.json` と `apply.json` を参照する。
 
 ## 出力フォーマット（必須）
 ```jsonc
@@ -35,3 +36,4 @@
 - 構文ではなく意味レベルの整合性に集中する。Rubric に基づき必須要素の抜け・矛盾を検出する。
 - 不明点はエラーではなく質問として `suggested_followup` に載せる。
 - 1 delta に収まらない課題が見つかった場合は、新しい delta を提案する。
+- 検証結果は `context-delta/changes/{delta-id}/verify.json` として保存する。

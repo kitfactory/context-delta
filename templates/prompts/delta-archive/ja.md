@@ -7,6 +7,7 @@
 - `delta apply` の before/after/patch
 - `delta verify` の結果（あれば）
 - 使用した PromptCard ID
+- いずれも `context-delta/changes/{delta-id}/` に保存されている前提で、`propose.json` / `apply.json` / `verify.json` を参照する。
 
 ## 出力（ファイル構成例）
 ```
@@ -29,3 +30,4 @@ delta_archive/2025-11-18_142300/
 ## ルール
 - 未完タスクや別目的が混ざる場合はアーカイブせず、新しい delta を切る。
 - 大規模なナレッジや feedback はここでは扱わない（別プロジェクトで管理）。
+- 出力は `delta_archive/{timestamp}/` に保存し、元の `context-delta/changes/{delta-id}/` から対応する情報を参照する。
